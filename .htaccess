@@ -1,0 +1,13 @@
+
+
+RewriteEngine On
+RewriteRule ^(.*)\.html$ $1.php [L]
+
+
+
+
+
+
+
+
+
