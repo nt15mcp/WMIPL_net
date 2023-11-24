@@ -1,6 +1,8 @@
 # ignore file with login information #
 ######################################
 includes/dbh.inc.php
+includes/resetpwd.inc.php
+includes/pwdreset.inc.php
 
 # Compiled source #
 ###################
