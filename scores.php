@@ -95,7 +95,7 @@
 			// Listen for the checkbox state to change
 			divCheckboxes.forEach((divCheckbox, index) => {
 				// Add an event listener
-				checkbox.addEventListener('change', (event) => {
+				divCheckbox.addEventListener('change', (event) => {
 					if (event.target.checked) {
 						// Display the iFrame
 						divCheckboxes[index].style.display = 'block';
