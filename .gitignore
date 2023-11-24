@@ -1,0 +1,3 @@
+# ignore file with login information #
+######################################
+includes/dbh.inc.php
