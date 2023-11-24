@@ -89,9 +89,9 @@
 			const divG = document.getElementById('DivG');
 			const unass = document.getElementById('Unass');
 			// Create an array of the iframes
-			const divFrames = [divA, divB, divC, divD, divE, divF, divG, unass]
+			const divFrames = [divA, divB, divC, divD, divE, divF, divG, unass];
 			// Create a variable of the visible iframes
-			var chkboxCount = 0
+			var chkboxCount = 0;
 			// Listen for the checkbox state to change
 			divCheckboxes.forEach((divCheckbox, index) => {
 				// Add an event listener
@@ -107,7 +107,7 @@
 						// Decrement the count of visible frames
 						chkboxCount = chkboxCount - 1;
 					}
-				}
+				});
 			});
 			//Determine if "Select All" should be checked
 			if (chkboxCount == divFrames.length) {
