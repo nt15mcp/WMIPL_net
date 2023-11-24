@@ -101,22 +101,22 @@
 						divFrames[index].style.display = 'block';
 						// Add a count to the visible frames
 						chkboxCount = chkboxCount + 1;
+						//Determine if "Select All" should be checked
+						if (chkboxCount == divFrames.length) {
+							selectAllChkbox.checked = true;
+						}
 					} else {
 						// Hide the iframe
 						divFrames[index].style.display = 'none';
 						// Decrement the count of visible frames
 						chkboxCount = chkboxCount - 1;
+						// Uncheck "Select All"
+						if (selectAllChkbox.checked) {
+							selectAllChkbox.checked = false;
+						}
 					}
 				});
 			});
-			//Determine if "Select All" should be checked
-			if (chkboxCount == divFrames.length) {
-				selectAllChkbox.checked = true;
-			} else {
-				if (selectAllChkbox.checked) {
-					selectAllChkbox.checked = false;
-				}
-			}
 			// Listen for the "Select All" to change
 			selectAllChkbox.addEventListener('change', (event) => {
 				if (event.target.checked) {
