@@ -28,12 +28,17 @@
 				<div class="w3-bar-item">
 					<input id="divFChk" type="checkbox" label="Division F" value="false"><label>Division F</label>
 				</div>
+				
+				<!-- Remove unused divisions -->
+				<!--
 				<div class="w3-bar-item">
 					<input id="divGChk" type="checkbox" label="Division G" value="false"><label>Division G</label>
 				</div>
 				<div class="w3-bar-item">
 					<input id="unassChk" type="checkbox" label="Unassigned" value="false"><label>Unassigned</label>
 				</div>
+				-->
+				
 				<div class="w3-bar-item">
 					<input id="selectAllChk" type="checkbox" label="Select/Deselect All" value="true"><label>Select/Deselect All</label>
 				</div>
@@ -78,7 +83,7 @@
 			const unassChkbox = document.getElementById('unassChk');
 			const selectAllChkbox = document.getElementById('selectAllChk');
 			// Create an array of the checkboxes
-			const divCheckboxes = [divAChkbox, divBChkbox, divCChkbox, divDChkbox, divEChkbox, divFChkbox, divGChkbox, unassChkbox];
+			const divCheckboxes = [divAChkbox, divBChkbox, divCChkbox, divDChkbox, divEChkbox, divFChkbox];
 			// Create a constant for each iFrame
 			const divA = document.getElementById('DivA');
 			const divB = document.getElementById('DivB');
@@ -89,7 +94,7 @@
 			const divG = document.getElementById('DivG');
 			const unass = document.getElementById('Unass');
 			// Create an array of the iframes
-			const divFrames = [divA, divB, divC, divD, divE, divF, divG, unass];
+			const divFrames = [divA, divB, divC, divD, divE, divF];
 			// Create a variable of the visible iframes
 			var chkboxCount = 0;
 			// Listen for the checkbox state to change
