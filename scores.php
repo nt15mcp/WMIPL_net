@@ -98,12 +98,12 @@
 				divCheckbox.addEventListener('change', (event) => {
 					if (event.target.checked) {
 						// Display the iFrame
-						divCheckboxes[index].style.display = 'block';
+						divFrames[index].style.display = 'block';
 						// Add a count to the visible frames
 						chkboxCount = chkboxCount + 1;
 					} else {
 						// Hide the iframe
-						divCheckboxes[index].style.display = 'none';
+						divFrames[index].style.display = 'none';
 						// Decrement the count of visible frames
 						chkboxCount = chkboxCount - 1;
 					}
