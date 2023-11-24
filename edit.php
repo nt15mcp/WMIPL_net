@@ -1,16 +1,19 @@
 <?php
+	// Need to start a new session if necessary and track what page we are on for this session 
 	session_start();
+	// I was a bad programmer and don't remember why this is needed
 	if(!isset($_SESSION['firstname'])){
 		header('Location index.php');
 	}
 	unset($_SESSION['page']);
-	require "header.php";
+	require "header.php"; // Use common header file so no need to repeat for each page
 	
 ?>
 
 	<main>
 		<div class="w3-center" style="padding:10px">
 		</br>
+		<!-- Here I am trying to create a data intake form for users to fill in their personal information -->
 			<h1>Your account information</h1>
 			<p style="text-align:left">Your name will be visible to members when signed into the website.  The rest of the information contained in this form will only be used by you or to contact you</p>
 			<form action="includes/edit-submit.inc.php" class="w3-form" method="post">
@@ -44,6 +47,7 @@
 				<label for="city">City:</label>
               	<input type="text" name="city" <?php echo "value='".$_SESSION['city']."'";?>>
 				<label for="state">State:</label>
+				<!-- There is probably a way easier way of doing this -->
 				<select name="state">
 					<option <?php if(isset($_SESSION['state'])){if($_SESSION['state']==="AL"){echo 'selected';}} ?> value="AL">Alabama (AL)</option>
 					<option <?php if(isset($_SESSION['state'])){if($_SESSION['state']==="AK"){echo 'selected';}} ?> value="AK">Alaska (AK)</option>
@@ -120,6 +124,7 @@
 			</br>
 		</div>
 	</main>
+	<!-- Use Javascript to mask the phone inputs so the value is consistent -->
 	<script type="text/javascript">
 		const $priphone = document.getElementByID('phonepri');
 		const $secphone = document.getElementByID('phonesec');
@@ -130,5 +135,5 @@
 	</script>
 		
 <?php
-	require "footer.php";
+	require "footer.php"; // Use common footer file so no need to repeat for each page
 ?>
