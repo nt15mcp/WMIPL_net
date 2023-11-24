@@ -1,1 +1,0 @@
-This repository will store all of the files and folders on my NRA Precision Pistol League website WMIPL.net
