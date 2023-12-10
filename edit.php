@@ -109,13 +109,9 @@
 			</br>
 			<div class="w3-input w3-left">
 			</br>
-				<label for="phonepri">Phone (primary):</label>
-				<input type="tel" id="phonepri" name="phonepri" <?php echo "value=".$_SESSION['phonepri'];?>></br>
-				<?php if(isset($_GET['error'])){if($_GET['error'] == "invalidpriphone"){echo '<strong style="text-color:red">Phone number is invalid!</strong>';}} ?>
-				</br>
-				<label for="phonesec">Phone (secondary):</label>
-				<input type="tel" id="phonesec" name="phonesec" <?php echo "value=(".$_SESSION['phonesec'];?>></br>
-				<?php if(isset($_GET['error'])){if($_GET['error'] == "invalidsecphone"){echo '<strong style="text-color:red">Phone number is invalid!</strong>';}} ?>
+				<label for="phone">Phone:</label>
+				<input type="tel" id="phone" name="phone" <?php echo "value=".$_SESSION['phone'];?>></br>
+				<?php if(isset($_GET['error'])){if($_GET['error'] == "invalidphone"){echo '<strong style="text-color:red">Phone number is invalid!</strong>';}} ?>
 				</br>
 			</div>
 			</br>
@@ -126,11 +122,9 @@
 	</main>
 	<!-- Use Javascript to mask the phone inputs so the value is consistent -->
 	<script type="text/javascript">
-		const $priphone = document.getElementByID('phonepri');
-		const $secphone = document.getElementByID('phonesec');
+		const $priphone = document.getElementByID('phone');
 		const $zip = document.getElementByID('zip');
-		$priphone.inputmask({"mask": "(999) 999-9999"});
-		$secphone.inputmask({"mask": "(999) 999-9999"});
+		$phone.inputmask({"mask": "(999) 999-9999"});
 		$zip.inputmask({"mask": "99999"});
 	</script>
 		
