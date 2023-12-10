@@ -37,7 +37,7 @@ if (isset($_POST['login-submit'])) {
 					$_SESSION['userID'] = $row['id'];
 					$_SESSION['userName'] = $row['username'];
 					$_SESSION['email'] = $row['email'];
-					$sql = "SELECT * FROM executives WHERE user_id=".$_SESSION['userID'];
+					$sql = "SELECT * FROM executives WHERE login_id=".$_SESSION['userID'];
 					$stmt = mysqli_stmt_init($conn);
 					if (!mysqli_stmt_prepare($stmt, $sql)) {
 						header("Location: ../".$_SESSION['page'].".php?error=sqlierror");
