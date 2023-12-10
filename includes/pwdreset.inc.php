@@ -8,7 +8,7 @@ require 'PHPMailer/src/SMTP.php';
 if (isset($_POST['reset-request-submit'])) {
 	require 'dbh.inc.php';
 	$userEmail = $_POST['email'];
-	$sql = "SELECT * FROM Login WHERE Email=?";
+	$sql = "SELECT * FROM logins WHERE email=?";
 	$stmt = mysqli_stmt_init($conn);
 	
 	if (!mysqli_stmt_prepare($stmt, $sql)) {

@@ -7,7 +7,7 @@ if (isset($_SESSION['page'])) {
 	
 	$page = $_SESSION['page']; // Set page variable for future use
 	
-	$sql = "SELECT Content FROM Editor WHERE Page = ? ORDER BY Created DESC LIMIT 1" ; // Set query for last saved data for this page
+	$sql = "SELECT content FROM pages WHERE page = ? ORDER BY created_at DESC LIMIT 1" ; // Set query for last saved data for this page
 	$stmt = mysqli_stmt_init($conn); // Initialize the query for MySQL
 	// Check for good connection, capture error if not
 	if (!mysqli_stmt_prepare($stmt, $sql)) {
@@ -22,7 +22,7 @@ if (isset($_SESSION['page'])) {
 		$result = mysqli_stmt_get_result($stmt);
 		// If content exists in the result, assign it to the variable
 		if ($row = mysqli_fetch_assoc($result)) {
-			$content = $row['Content'];
+			$content = $row['content'];
 		}
 		// Otherwise give generic error
 		else {

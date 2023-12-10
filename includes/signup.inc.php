@@ -29,7 +29,7 @@ if(isset($_POST['signup-submit'])) {
 		exit();
 	}
 	else {
-		$sql = "SELECT UserName FROM Login WHERE UserName=? OR Email=?";
+		$sql = "SELECT username FROM logins WHERE username=? OR email=?";
 		$stmt = mysqli_stmt_init($conn);
 		if (!mysqli_stmt_prepare($stmt, $sql)){
 			header("Location: ../signup.php?error=sqlierror");
@@ -45,7 +45,7 @@ if(isset($_POST['signup-submit'])) {
 				exit();
 			}
 			else {
-				$sql = "INSERT INTO Login (UserName, Email, Password) VALUES (?,?, ?)";
+				$sql = "INSERT INTO logins (username, email, password) VALUES (?,?, ?)";
 				$stmt = mysqli_stmt_init($conn);
 				if(!mysqli_stmt_prepare($stmt, $sql)){
 					header("Location: ../signup.php?error=sqlerror");
