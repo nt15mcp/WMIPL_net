@@ -17,7 +17,7 @@ if (isset($_POST['login-submit'])) {
 	}
 	else {
 		
-		$sql = "SELECT * FROM Login WHERE UserName=? OR email=?";
+		$sql = "SELECT * FROM logins WHERE username=? OR email=?";
 		$stmt = mysqli_stmt_init($conn);
 		if (!mysqli_stmt_prepare($stmt, $sql)) {
 			header("Location: ../".$_SESSION['page'].".php?error=sqlierror");
@@ -34,10 +34,10 @@ if (isset($_POST['login-submit'])) {
 					exit();
 				}
 				else if ($pwdCheck == true) {
-					$_SESSION['userID'] = $row['LoginID'];
-					$_SESSION['userName'] = $row['UserName'];
-					$_SESSION['email'] = $row['Email'];
-					$sql = "SELECT * FROM Executives WHERE MemberID=".$_SESSION['userID'];
+					$_SESSION['userID'] = $row['id'];
+					$_SESSION['userName'] = $row['username'];
+					$_SESSION['email'] = $row['email'];
+					$sql = "SELECT * FROM executives WHERE user_id=".$_SESSION['userID'];
 					$stmt = mysqli_stmt_init($conn);
 					if (!mysqli_stmt_prepare($stmt, $sql)) {
 						header("Location: ../".$_SESSION['page'].".php?error=sqlierror");
@@ -47,7 +47,7 @@ if (isset($_POST['login-submit'])) {
 						mysqli_stmt_execute($stmt);
 						$result = mysqli_stmt_get_result($stmt);
 						if ($row = mysqli_fetch_assoc($result)) {
-							$_SESSION['executive'] = $row['Title'];
+							$_SESSION['executive'] = $row['title'];
 						}
 					}
 					header("Location: ../".$_SESSION['page'].".php?login=success");
