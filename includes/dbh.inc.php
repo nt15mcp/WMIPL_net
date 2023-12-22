@@ -1,6 +1,7 @@
 <?php
 
-$ini = parse_ini_file('/home/u437830502/domains/wmipl.net/Configs/app.ini');
+// $ini = parse_ini_file('/home/u437830502/domains/wmipl.net/Configs/app.ini');
+$ini = parse_ini_file('app.ini');
 $servername = $ini['db_server'];
 $dbusername = $ini['db_user'];
 $dbpassword = $ini['db_pword'];
