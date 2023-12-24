@@ -22,13 +22,13 @@ while($row = $result->fetch_assoc() ){
                 $divisions[$row['division']] += array($row['team']=>array($row['number'], $row['name']));
             // this is another shooter in the current division and current team
             } else {
-                $divisions[$row['division']][$row['team']] += array($row['number'], $row['name']);
+                array_push($divisions[$row['division']][$row['team']],array($row['number'], $row['name']));
             }
         }
     }
 }
 // free the result set from the stored procedure calll
-$result -> next_result();
+$result -> free_result();
 // $divisions is now an array of [division:[team:[shooter_num, shooter_name],[shooter_num, shooter_name]],[team:[shooter_num, shooter_name],[shooter_num, shooter_name]]],division:[team:[shooter_num, shooter_name],[shooter_num, shooter_name]],[team:[shooter_num, shooter_name],[shooter_num, shooter_name]]]]
 echo json_encode($divisions); //check your work!
 ?>
