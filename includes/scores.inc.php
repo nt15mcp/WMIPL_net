@@ -7,7 +7,7 @@ $divisions = array();
 // get data from the database for all of the current season of shooters and scores
 $result = $conn->query("CALL current_roster()");
 //while loop runs for all the data
-while($row = $result->mysqli_fetch_assoc() ){
+while($row = $result->fetch_assoc() ){
     // if this is the first row, start the array
     if(!$divisions){
         // multidimensional array where shooter and shooter number are within team which is within division
@@ -27,6 +27,8 @@ while($row = $result->mysqli_fetch_assoc() ){
         }
     }
 }
+// free the result set from the stored procedure calll
+$result -> next_result();
 // $divisions is now an array of [division:[team:[shooter_num, shooter_name],[shooter_num, shooter_name]],[team:[shooter_num, shooter_name],[shooter_num, shooter_name]]],division:[team:[shooter_num, shooter_name],[shooter_num, shooter_name]],[team:[shooter_num, shooter_name],[shooter_num, shooter_name]]]]
 echo json_encode($divisions); //check your work!
 ?>
