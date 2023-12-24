@@ -101,9 +101,42 @@ while($row = $result->fetch_assoc()){
         }
     }
 }
+// put the last shooter's scores into the $divisions array
+$divisions[$division][$team][$number] = array($shooter => $scores);
  // free the result set from the stored procedure
 $conn -> next_result();
 
 // divisions should now have scores attached to each shooter's name
 //echo json_encode($divisions); // check your work!
+
+// start with a fresh array
+$scores = array();
+// get lyas for returning shooters
+$result = $conn->query("CALL current_lyas()");
+while($row = $result->fetch_assoc()){
+    $scores += array($row['name']=>$row['score']);
+}
+//echo json_encode($scores);
+// free the result set from the stored procedure
+$conn -> next_result();
+
+// cycle through the existing divisions and add lyas to shooters
+foreach($divisions as $div => $teams){
+    foreach($teams as $team => $numbers){
+        foreach($numbers as $number => $shooters){
+            // foreach only works if $shooters is an array, which will not be the case pre-week 1 or for anyone who missed the first few weeks
+            if(!is_string($shooters)){
+                foreach($shooters as $shooter => $data){
+                    if(array_key_exists($shooter, $scores)){
+                        $divisions[$div][$team][$number][$shooter] += array('lya'=>$scores[$shooter]);
+                    }
+                }
+            } else {
+                $divisions[$div][$team][$number] = array($shooters => array('lya'=>$scores[$shooters]));
+            }
+        }
+    }
+}
+//echo json_encode($divisions);
+
 ?>
