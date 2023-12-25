@@ -225,18 +225,25 @@ foreach($divisions as $div => $teams){
         //echo 'starting lyaas for '.$team.'='.$lyas.'<br>';
         $numb_keys = array_keys($numbers);
         for($x=0;$x<6;$x++){
+            // build the test shooter number to see if shooter exists
             $test_num = $numb_keys[0] - ($numb_keys[0]%10) + $x;
             //echo $test_num.'<br>';
+            // check to see if shooter exists
             if(!array_key_exists($test_num,$numbers)){
+                // shooter does not exist, get the teams average of lya
                 $team_lya = number_format($lyas/(count($divisions[$div][$team])-1),0);
+                // create an empty array to hold scores
                 $dum_scores = array();
+                // create scores for each week
                 for($wk=1;$wk<16;$wk++){
+                    // only add scores for weeks that are completed
                     if($wk > $match_completed){
                         $dum_scores += array($wk=>array('0','0','0'));
                     } else {
                         $dum_scores += array($wk=>array($team_lya, '0','0'));
                     }
                 }
+                // determine the class of the fake shooter
                 if($team_lya > $classes['A']){
                     $class = 'A';
                 }elseif($team_lya > $classes['B']){
@@ -250,22 +257,91 @@ foreach($divisions as $div => $teams){
                 }else{
                     $class = 'F';
                 }
+                // add to the score array the necessary statistics
                 array_push($dum_scores, array('class'=>$class));
                 array_push($dum_scores, array('agg'=>$team_lya*$match_completed));
                 array_push($dum_scores, array('avg'=>$team_lya));
                 array_push($dum_scores, array('lya'=>$team_lya));
                 array_push($dum_scores, array('high'=>$team_lya));
+                // push the fake shooter, scores, and statistics to the divisions array
                 $divisions[$div][$team] += array($test_num=>array('DUMMY'=>$dum_scores));
+                // add the fake shooter's lya to the lyaa for the team
                 $lyas += $team_lya;
                 //echo 'dummy added to '.$team.'<br>';
             }
         }          
         //echo 'ending lyaas for '.$team.'= '.$lyas.'<br>';
+        // replace the team's lyaa with the new one including the fake shooters
         $divisions[$div][$team]['lyaas'] = $lyas;
+        // sort it for readability
         ksort($divisions[$div][$team]);
     }
 }
 
-//echo json_encode($divisions);
+//create an array to represent opposing teams
+$opp_teams_array = array([2,3,4,2,3,4,2,3,4,2,3,4,2,3,4],[1,4,3,1,4,3,1,4,3,1,4,3,1,4,3],[4,1,2,4,1,2,4,1,2,4,1,2,4,1,2],[3,2,1,3,2,1,3,2,1,3,2,1,3,2,1]);
+if($match_completed < 15){
+    $hand_matches = $match_completed + 2;
+} else {
+    $hand_matches = $match_completed + 1;
+}
+// create the team statistics and add the opposing teams array to the team
+foreach($divisions as $div=>$teams){
+    $t = 0;
+    foreach($teams as $team => $numbers){
+        $divisions[$div][$team] += array('opp_teams'=>$opp_teams_array[$t]);
+        $team_agg = array();
+        $team_agg_agg = 0;
+        $team_agg_avg = array();
+        $team_hand_avg = array();
+        $n = 0;
+        foreach($numbers as $number=>$shooters){
+            //echo json_encode($shooters).'<br>';
+            if($n<6){
+                $w = 1;
+                foreach($shooters as $name => $scores){
+                    for($w=1;$w<16;$w++){
+                        //echo json_encode($score).'<br>';
+                        if(array_key_exists('wk'.$w.'agg',$team_agg)){
+                            $team_agg['wk'.$w.'agg'] += $scores[$w][0];
+                        } else {
+                            $team_agg += array('wk'.$w.'agg'=>$scores[$w][0]);
+                        }
+                    }
+                }
+                for($y=1;$y<16;$y++){
+                    //echo json_encode($team_agg).'<br>';
+                        if($y==1){
+                            $team_agg_agg += $team_agg['wk'.$y.'agg'];
+                            $team_agg_avg += array('wk'.$y.'agg_avg' => $team_agg_agg/$y);
+                            $team_hand_avg += array('wk'.$y.'hand_avg' => number_format($divisions[$div][$team]['lyaas'],0));
+
+                        } else {
+                            $team_agg_agg += $team_agg['wk'.$y.'agg'];
+                            $team_agg_avg += array('wk'.$y.'agg_avg' => $team_agg_agg/$y);
+                            //echo $divisions[$div][$team]['lyaas'].'<br>';                    
+                            if($y<$match_completed+1){
+                                if($y == 3){
+                                    $team_hand_avg += array('wk'.$y.'hand_avg' => ((floatval($divisions[$div][$team]['lyaas'])+$team_agg['wk'.($y-1).'agg']+$team_agg['wk'.($y-2).'agg'])/3));
+                                }elseif($y == 2){
+                                    $team_hand_avg += array('wk'.$y.'hand_avg' => ((floatval($divisions[$div][$team]['lyaas'])*2)+$team_agg['wk'.($y-1).'agg'])/3);
+                                }else{
+                                    $team_hand_avg += array('wk'.$y.'hand_avg' => ($team_agg['wk'.($y-1).'agg']+$team_agg['wk'.($y-2).'agg']+$team_agg['wk'.($y-3).'agg'])/3);
+                                }
+                            }else{
+                                $team_hand_avg += array('wk'.$y.'hand_avg' => 0);
+                            }
+                        }
+                }
+                $n++;
+            }
+        }
+        $divisions[$div][$team] += array('wk_agg' => $team_agg);
+        $divisions[$div][$team] += array('wk_agg_avg' => $team_agg_avg);
+        $divisions[$div][$team] += array('wk_hand_avg' => $team_hand_avg);
+        $t++;
+    }
+}
+echo json_encode($divisions);
 
 ?>
