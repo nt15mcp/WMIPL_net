@@ -149,6 +149,14 @@ $res_arr = $result->fetch_assoc();
 $match_completed = $res_arr['match_num'];
 $conn->next_result();
 
+//create a new variable to hold the classes
+$classes = array();
+// get current class breakdown
+$result = $conn->query("CALL current_class");
+$classes = $result->fetch_assoc();
+$conn->next_result();
+
+//echo json_encode($classes);
 //echo json_encode($match_completed);
 // $divisions should now include all current season divisions, teams, shooters and scores including last year averages
 // echo json_encode($divisions); // Check your work!
@@ -181,16 +189,30 @@ foreach($divisions as $div => $teams){
                         $agg += $scores[$wk][0];
                     }
                 }
+                if($scores['lya'] > $classes['A']){
+                    $class = 'A';
+                }elseif($scores['lya'] > $classes['B']){
+                    $class = 'B';
+                }elseif($scores['lya'] > $classes['C']){
+                    $class = 'C';
+                }elseif($scores['lya'] > $classes['D']){
+                    $class = 'D';
+                }elseif($scores['lya'] > $classes['E']){
+                    $class = 'E';
+                }else{
+                    $class = 'F';
+                }
                 $avg = (($agg + $divisions[$div][$team][$number][$shooter]['lya'])/16);
                 $divisions[$div][$team][$number][$shooter] += array('agg'=>$agg);
                 $divisions[$div][$team][$number][$shooter] += array('avg'=>$avg);
                 $divisions[$div][$team][$number][$shooter] += array('high'=>$high);
+                $divisions[$div][$team][$number][$shooter] += array('class'=>$class);
                 ksort($divisions[$div][$team][$number][$shooter]);
             }
         }
     }
 }
 
-echo json_encode($divisions);
+//echo json_encode($divisions);
 
 ?>
