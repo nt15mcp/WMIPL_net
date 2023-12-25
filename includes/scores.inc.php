@@ -165,10 +165,13 @@ $conn->next_result();
 $agg = 0;
 foreach($divisions as $div => $teams){
     foreach($teams as $team => $numbers){
+        $lyas = 0;
         foreach($numbers as $number => $shooters){
+            $s=0;
             foreach($shooters as $shooter => $scores){
+                $agg = 0;
                 $high = 0;
-                for($wk=1;$wk<=15;$wk++){
+                for($wk=1;$wk< 16;$wk++){
                     if(!array_key_exists($wk,$scores)){
                         if($wk < $match_completed){
                             //echo json_encode($scores).'<br>';
@@ -208,8 +211,58 @@ foreach($divisions as $div => $teams){
                 $divisions[$div][$team][$number][$shooter] += array('high'=>$high);
                 $divisions[$div][$team][$number][$shooter] += array('class'=>$class);
                 ksort($divisions[$div][$team][$number][$shooter]);
+                $lyas += $scores['lya'];
             }
         }
+        $divisions[$div][$team] += array('lyaas'=>$lyas);
+    }
+}
+
+// add in dummy shooters where appropriate
+foreach($divisions as $div => $teams){
+    foreach($teams as $team=>$numbers){
+        $lyas = $divisions[$div][$team]['lyaas'];
+        //echo 'starting lyaas for '.$team.'='.$lyas.'<br>';
+        $numb_keys = array_keys($numbers);
+        for($x=0;$x<6;$x++){
+            $test_num = $numb_keys[0] - ($numb_keys[0]%10) + $x;
+            //echo $test_num.'<br>';
+            if(!array_key_exists($test_num,$numbers)){
+                $team_lya = number_format($lyas/(count($divisions[$div][$team])-1),0);
+                $dum_scores = array();
+                for($wk=1;$wk<16;$wk++){
+                    if($wk > $match_completed){
+                        $dum_scores += array($wk=>array('0','0','0'));
+                    } else {
+                        $dum_scores += array($wk=>array($team_lya, '0','0'));
+                    }
+                }
+                if($team_lya > $classes['A']){
+                    $class = 'A';
+                }elseif($team_lya > $classes['B']){
+                    $class = 'B';
+                }elseif($team_lya > $classes['C']){
+                    $class = 'C';
+                }elseif($team_lya > $classes['D']){
+                    $class = 'D';
+                }elseif($team_lya > $classes['E']){
+                    $class = 'E';
+                }else{
+                    $class = 'F';
+                }
+                array_push($dum_scores, array('class'=>$class));
+                array_push($dum_scores, array('agg'=>$team_lya*$match_completed));
+                array_push($dum_scores, array('avg'=>$team_lya));
+                array_push($dum_scores, array('lya'=>$team_lya));
+                array_push($dum_scores, array('high'=>$team_lya));
+                $divisions[$div][$team] += array($test_num=>array('DUMMY'=>$dum_scores));
+                $lyas += $team_lya;
+                //echo 'dummy added to '.$team.'<br>';
+            }
+        }          
+        //echo 'ending lyaas for '.$team.'= '.$lyas.'<br>';
+        $divisions[$div][$team]['lyaas'] = $lyas;
+        ksort($divisions[$div][$team]);
     }
 }
 
