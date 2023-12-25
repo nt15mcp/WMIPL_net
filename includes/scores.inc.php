@@ -102,6 +102,9 @@ while($row = $result->fetch_assoc()){
     }
 }
 // put the last shooter's scores into the $divisions array
+if ($qual){
+    $scores += array('lya'=>(array_sum($qual)/count($qual)));
+}
 $divisions[$division][$team][$number] = array($shooter => $scores);
  // free the result set from the stored procedure
 $conn -> next_result();
@@ -137,6 +140,57 @@ foreach($divisions as $div => $teams){
         }
     }
 }
-//echo json_encode($divisions);
+
+// create a new variable for scores calculations
+$match_completed = 0;
+// get the latest match number from db
+$result = $conn->query("CALL match_completed");
+$res_arr = $result->fetch_assoc();
+$match_completed = $res_arr['match_num'];
+$conn->next_result();
+
+//echo json_encode($match_completed);
+// $divisions should now include all current season divisions, teams, shooters and scores including last year averages
+// echo json_encode($divisions); // Check your work!
+
+// Calculate all of the missing scores
+$agg = 0;
+foreach($divisions as $div => $teams){
+    foreach($teams as $team => $numbers){
+        foreach($numbers as $number => $shooters){
+            foreach($shooters as $shooter => $scores){
+                $high = 0;
+                for($wk=1;$wk<=15;$wk++){
+                    if(!array_key_exists($wk,$scores)){
+                        if($wk < $match_completed){
+                            //echo json_encode($scores).'<br>';
+                            $missed_score = (($agg + $divisions[$div][$team][$number][$shooter]['lya'])/$wk)-10;
+                            $divisions[$div][$team][$number][$shooter] += array($wk=>array($missed_score,'0','1'));
+                            $agg += $missed_score;
+                            if($high < $missed_score){
+                                $high = $missed_score;
+                            }
+                        } else {
+                            $divisions[$div][$team][$number][$shooter] += array($wk=>array('0','0','0'));
+                        }
+                    } else {
+                        array_push($divisions[$div][$team][$number][$shooter][$wk],'0');
+                        if($high < $scores[$wk][0]){
+                            $high = $scores[$wk][0];
+                        }
+                        $agg += $scores[$wk][0];
+                    }
+                }
+                $avg = (($agg + $divisions[$div][$team][$number][$shooter]['lya'])/16);
+                $divisions[$div][$team][$number][$shooter] += array('agg'=>$agg);
+                $divisions[$div][$team][$number][$shooter] += array('avg'=>$avg);
+                $divisions[$div][$team][$number][$shooter] += array('high'=>$high);
+                ksort($divisions[$div][$team][$number][$shooter]);
+            }
+        }
+    }
+}
+
+echo json_encode($divisions);
 
 ?>
