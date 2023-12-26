@@ -43,15 +43,31 @@ require "includes/scores-edit.inc.php";
                                     <tr>
                                         <th><h3>'.$number.'</h3></th>
                                 ';
-                                foreach($shooters as $name=>$scores){
-                                    $shooter = $name;
-                                    echo '<th><h3>'.$name.'<th><h3>';
-                                    break;
+                                if(!is_string($shooters)){
+                                    foreach($shooters as $name=>$scores){
+                                        $shooter = $name;
+                                        echo '<th><h3>'.$name.'</th><h3>';
+                                        break;
+                                    }
+                                    for($wk=1;$wk<4;$wk++){
+                                        if(array_key_exists('Q'.$wk,$scores)){
+                                            echo '<td>'.$scores['Q'.$wk][0].'</td>';
+                                        } else {
+                                            echo '<td></td>';
+                                        }
+                                    }
+                                    for($wk=1;$wk<16;$wk++){
+                                        if(array_key_exists($wk,$scores)){
+                                            echo '<td>'.$scores[$wk][0].'</td>';
+                                        } else {
+                                            echo '<td></td>';
+                                        }
+                                    }
+                                }else{
+                                    echo '<th><h3>'.$shooters.'</th></h3>';
                                 }
-                                for($wk=1;$wk<4;$wk++){
-                                    if(array_key_exists('Q'))
-                                }
-                            $s++;
+                                $s++;
+                            }
                         }
                     }
                 }
