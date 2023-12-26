@@ -175,7 +175,7 @@ foreach($divisions as $div => $teams){
                     if(!array_key_exists($wk,$scores)){
                         if($wk < $match_completed){
                             //echo json_encode($scores).'<br>';
-                            $missed_score = (($agg + $divisions[$div][$team][$number][$shooter]['lya'])/$wk)-10;
+                            $missed_score = round(($agg + $divisions[$div][$team][$number][$shooter]['lya'])/$wk)-10;
                             $divisions[$div][$team][$number][$shooter] += array($wk=>array($missed_score,'0','1'));
                             $agg += $missed_score;
                             if($high < $missed_score){
@@ -348,22 +348,51 @@ foreach($divisions as $div=>$teams){
     }
 }
 
-// calculate handicaps and wins for each team
+// calculate handicaps and totals for each team
 foreach($divisions as $div => $teams){
     $div_teams = array_keys($teams);
     foreach($teams as $team=>$numbers){
         $team_handicap = array();
+        $team_total = array();
         for($wk=1;$wk<16;$wk++){
             $opp_team = $div_teams[($numbers['opp_teams'][($wk-1)]-1)];
-            if($wk < $match_completed+1){
+            if($wk <= $match_completed+1){
                 if($numbers['wk_hand_avg']['wk'.$wk.'hand_avg'] < $teams[$opp_team]['wk_hand_avg']['wk'.$wk.'hand_avg']){
-                    $team_handicap += array('wk'.$wk.'handicap' => ($teams[$opp_team]['wk_hand_avg']['wk'.$wk.'hand_avg'] - $numbers['wk_hand_avg']['wk'.$wk.'hand_avg']) * 0.8);
+                    $team_handicap += array('wk'.$wk.'handicap' => round(($teams[$opp_team]['wk_hand_avg']['wk'.$wk.'hand_avg'] - $numbers['wk_hand_avg']['wk'.$wk.'hand_avg']) * 0.8));
                 } else {
                     $team_handicap += array('wk'.$wk.'handicap' => 0);
                 }
+                $team_total += array('wk'.$wk.'total' => ($team_handicap['wk'.$wk.'handicap'] + $numbers['wk_agg']['wk'.$wk.'agg']));
+            } else {
+                $team_handicap += array('wk'.$wk.'handicap' => 0);
+                $team_total += array('wk'.$wk.'total' => 0);
             }
         }
         $divisions[$div][$team] += array('wk_handicap' => $team_handicap);
+        $divisions[$div][$team] += array('wk_total' => $team_total);
+    }
+}
+
+// calculate wins for each team
+foreach($divisions as $div => $teams){
+    $div_teams = array_keys($teams);
+    foreach($teams as $team => $numbers){
+        $wins = array();
+        $wins_total = 0;
+        for($wk=1;$wk<16;$wk++){
+            $opp_team = $div_teams[($numbers['opp_teams'][($wk-1)]-1)];
+            if($wk <= $match_completed) {
+                if($numbers['wk_total']['wk'.$wk.'total'] > $teams[$opp_team]['wk_total']['wk'.$wk.'total']){
+                    $wins += array('wk'.$wk.'win' => 1);
+                } else {
+                    $wins += array('wk'.$wk.'win' => 0);
+                }
+            } else {
+                $wins += array('wk'.$wk.'win' => 0);
+            }
+        }
+        $divisions[$div][$team] += array('wk_win' => $wins);
+        $divisions[$div][$team] += array('team_wins' => array_sum($wins));
     }
 }
 
