@@ -3,6 +3,11 @@
 	session_start();
 	$_SESSION['page']="scores";
 	require "header.php"; // Use common header file so no need to repeat for each page
+	if(isset($_SESSION['executive'])){
+		if($_SESSION['executive']=='Statistician'){
+			header("Location: scores-edit.php".$urlString); // if Statistician is logged in, go to editing page.
+		}
+	}
 ?>
 
 	<main>
