@@ -395,8 +395,6 @@ foreach($divisions as $div => $teams){
         $divisions[$div][$team] += array('team_wins' => array_sum($wins));
     }
 }
-
-
-echo json_encode($divisions);
+//echo json_encode($divisions);
 
 ?>
