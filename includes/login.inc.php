@@ -22,18 +22,16 @@ if (isset($_POST['login-submit'])) {
 		if (!mysqli_stmt_prepare($stmt, $sql)) {
 			header("Location: ../".$_SESSION['page'].".php?error=sqlierror");
 			exit();
-		}
-		else {
+		} else {
 			mysqli_stmt_bind_param($stmt, "ss", $emailusername, $emailusername);
 			mysqli_stmt_execute($stmt);
 			$result = mysqli_stmt_get_result($stmt);
 			if ($row = mysqli_fetch_assoc($result)) {
-				$pwdCheck = password_verify($password, $row['Password']);
+				$pwdCheck = password_verify($password, $row['password']);
 				if ($pwdCheck == false) {
 					header("Location: ../".$_SESSION['page'].".php?error=wrongpwd");
 					exit();
-				}
-				else if ($pwdCheck == true) {
+				} elseif ($pwdCheck == true) {
 					$_SESSION['userID'] = $row['id'];
 					$_SESSION['userName'] = $row['username'];
 					$_SESSION['email'] = $row['email'];
@@ -42,8 +40,7 @@ if (isset($_POST['login-submit'])) {
 					if (!mysqli_stmt_prepare($stmt, $sql)) {
 						header("Location: ../".$_SESSION['page'].".php?error=sqlierror");
 						exit();
-					}
-					else {
+					} else {
 						mysqli_stmt_execute($stmt);
 						$result = mysqli_stmt_get_result($stmt);
 						if ($row = mysqli_fetch_assoc($result)) {
@@ -52,12 +49,10 @@ if (isset($_POST['login-submit'])) {
 					}
 					header("Location: ../".$_SESSION['page'].".php?login=success");
 					exit();
-				}
-				else {
+				} else {
 					header("Location: ../".$_SESSION['page'].".php?error=wrongpwd");
 				}
-			}
-			else {
+			} else {
 				header("Location: ../".$_SESSION['page'].".php?error=nouser");
 				exit();
 			}
