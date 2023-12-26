@@ -12,7 +12,7 @@
         for($wk=1;$wk<16;$wk++){
             echo '<td';
             if($scores[$wk][2] == 1){
-                ' class="missed-score"';
+                echo ' class="missed-score"';
             }
             echo '>'.$scores[$wk][0].'</td>';
             if($scores[$wk][0] > 0){

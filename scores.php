@@ -36,10 +36,11 @@
 			</div>
 		</div>
 		<!-- create each division's display container -->
+		<div>
 		<?php
 			foreach($divisions as $div=> $teams){
 				echo '
-					<div class="w3-wide w3-center" id="Div'.$div.'" style="display:none;padding:10px">
+					<div class="w3-wide w3-center scores-container" id="Div'.$div.'" style="display:none;padding:10px">
 					<table>
 						<thead>
 							<tr>
@@ -54,10 +55,10 @@
 				}
 				echo '
 					</div>
-					<br>
 				';
 			}
 		?>	
+		</div>
 		<!-- Dynamically update the displayed divs based on the status of the checkboxes -->
 		<script type="text/javascript">
 			// Create a constant for each checkbox

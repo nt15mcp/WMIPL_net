@@ -1,25 +1,25 @@
 <?php
         echo '
-            <table>
+            <table class="w3-table">
                 <thead>
                     <tr></tr>
                     <tr>
                         <th scope="col" colspan="2" class="team-name"><h2>'.$name.'</h2></th>
-                        <th scope="col"><h3>Wk 1</h3></th>
-                        <th scope="col"><h3>Wk 2</h3></th>
-                        <th scope="col"><h3>Wk 3</h3></th>
-                        <th scope="col"><h3>Wk 4</h3></th>
-                        <th scope="col"><h3>Wk 5</h3></th>
-                        <th scope="col"><h3>Wk 6</h3></th>
-                        <th scope="col"><h3>Wk 7</h3></th>
-                        <th scope="col"><h3>Wk 8</h3></th>
-                        <th scope="col"><h3>Wk 9</h3></th>
-                        <th scope="col"><h3>Wk 10</h3></th>
-                        <th scope="col"><h3>Wk 11</h3></th>
-                        <th scope="col"><h3>Wk 12</h3></th>
-                        <th scope="col"><h3>Wk 13</h3></th>
-                        <th scope="col"><h3>Wk 14</h3></th>
-                        <th scope="col"><h3>Wk 15</h3></th>
+                        <th scope="col"><h3>Wk1</h3></th>
+                        <th scope="col"><h3>Wk2</h3></th>
+                        <th scope="col"><h3>Wk3</h3></th>
+                        <th scope="col"><h3>Wk4</h3></th>
+                        <th scope="col"><h3>Wk5</h3></th>
+                        <th scope="col"><h3>Wk6</h3></th>
+                        <th scope="col"><h3>Wk7</h3></th>
+                        <th scope="col"><h3>Wk8</h3></th>
+                        <th scope="col"><h3>Wk9</h3></th>
+                        <th scope="col"><h3>Wk10</h3></th>
+                        <th scope="col"><h3>Wk11</h3></th>
+                        <th scope="col"><h3>Wk12</h3></th>
+                        <th scope="col"><h3>Wk13</h3></th>
+                        <th scope="col"><h3>Wk14</h3></th>
+                        <th scope="col"><h3>Wk15</h3></th>
                         <th scope="col"><h3>Agg</h3></th>
                         <th scope="col"><h3>Wks</h3></th>
                         <th scope="col"><h3>Avg</h3></th>
@@ -45,7 +45,7 @@
                         <th scope="row"><h3>AGG</h3></th>
         ';
         foreach($numbers['wk_agg'] as $agg){
-            echo'       <td>'.$agg.'</td>';
+            echo'       <td class="odd-row">'.$agg.'</td>';
         }
         echo '
                         <td colspan="6"></td>
@@ -55,7 +55,7 @@
                         <th scope="row"><h3>AGG AVG</h3></th>
         ';
         foreach($numbers['wk_agg_avg'] as $avg){
-            echo '      <td>'.number_format($avg,1,'.','').'</td>';
+            echo '      <td class="even-row">'.number_format($avg,1,'.','').'</td>';
         }
         echo '
                         <td colspan="2"></td>
@@ -69,7 +69,7 @@
         ';
         foreach($numbers['wk_hand_avg'] as $hand_avg){
             echo '      
-                        <td>'.number_format($hand_avg,1,'.','').'</td>
+                        <td class="odd-row">'.number_format($hand_avg,1,'.','').'</td>
             ';
         }
         echo '
@@ -81,7 +81,7 @@
         ';
         foreach($numbers['wk_handicap'] as $hand){
             echo '
-                        <td>'.$hand.'</td>
+                        <td class="even-row">'.$hand.'</td>
             ';
         }
         echo '
@@ -93,7 +93,7 @@
         ';
         foreach($numbers['wk_total'] as $total){
             echo '
-                        <td>'.$total.'</td>
+                        <td class="odd-row">'.$total.'</td>
             ';
         }
         echo '
@@ -105,7 +105,7 @@
         ';
         foreach($numbers['wk_win'] as $win){
             echo '
-                        <td>'.$win.'</td>
+                        <td class="even-row">'.$win.'</td>
             ';
         }
         echo '
@@ -120,7 +120,7 @@
         ';
         foreach($numbers['opp_teams'] as $team){
             echo '
-                        <td>'.$team.'</td>
+                        <td class="odd-row">'.$team.'</td>
             ';
         }
         echo '
@@ -128,5 +128,6 @@
                     </tr>
                 </tfoot>
             </table>
+            <br>
         ';
 ?>
