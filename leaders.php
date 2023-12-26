@@ -12,10 +12,11 @@
 		</div>
 		<!-- Displays the Individual leaderboard -->
 		<div class="w3-wide w3-center" style="padding:10px">
-			<button><h2>INDIVIDUAL WINNDERS</h2></button>
+			<button class="w3-bar-item"><h2>INDIVIDUAL WINNERS</h2></button>
+			<button class="w3-bar-item"><h2>TEAM WINNERS</h2></button>
 		</div>
 		<div class="scores-container" id="individuals">
-			<table class="w3-table w3-center">
+			<table class="w3-table">
 				<thead>
 					<tr>
 						<th><h3>CLASS</h3></th>
@@ -82,6 +83,38 @@
 									<td>'.number_format($values['most_improv'],1).'</td>
 								</tr>
 							';
+						}
+					?>
+				</tbody>
+			</table>
+		</div>
+		<div class="scores-container" id="team">
+			<table class="w3-table">
+				<thead>
+					<tr>
+						<?php
+							foreach($team_winners as $div => $name){
+								echo '<th><h3>DIVISION '.$div.'</h3></th>';
+							}
+						?>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<?php
+							foreach($team_winners as $div => $name){
+								echo '<td><h4>'.$name.'</h4></td>';
+							}
+						?>
+					</tr>
+					<?php
+						$divs = array_keys($team_winners_names);
+						for($n=0;$n<count($team_winners_names[$divs[0]]);$n++){
+							echo '<tr>';
+							for($m=0;$m<count($divs);$m++){
+								echo '<td>'.$team_winners_names[$divs[$m]][$n].'</td>';
+							}
+							echo '</tr>';
 						}
 					?>
 				</tbody>

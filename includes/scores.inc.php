@@ -511,6 +511,63 @@ foreach($divisions as $teams){
         }
     }
 }
+
+// calculate team winners
+$team_winners = array();
+$team_winners_names = array();
+foreach($divisions as $div=>$teams){
+    if($div != 'U'){
+        $team_winners += array($div=> '');
+        $team_winners_names += array($div => array());
+        $wins = 0;
+        $team_names = array_keys($teams);
+        $opp_teams = array();
+        $tm = 1;
+        foreach($team_names as $name){
+            $opp_teams += array($tm => $name);
+            $tm ++;
+        }
+        foreach($team_names as $name){
+            if($teams[$name]['team_wins']>$wins){
+                $wins = $teams[$name]['team_wins'];
+                $team_winners[$div] = $name;
+            }elseif($teams[$name]['team-wins']=$wins){
+                $win = 0;
+                $totals = 0;
+                for($x=0;$x<count($teams[$name]['opp_teams']);$x++){
+                    if($opp_teams[$teams[$name]['opp_teams'][$x]] == $team_winners[$div]){
+                        $win += $teams[$name]['wk_win']['wk'.($x+1).'win'];
+                        $totals++;
+                    }
+                }
+                if($win/$totals > 0.5){
+                    $wins = $teams[$name]['team_wins'];
+                    $team_winners[$div]=$name;
+                }elseif($win/$totals == 0.5){
+                    if(round($teams[$name]['wk_agg_avg']['wk'.$match_completed.'agg_avg'],-4) > round($teams[$team_winners[$div]]['wk_agg_avg']['wk'.$match_completed.'agg_avg'],-4)){
+                        $wins = $teams[$name]['team_wins'];
+                        $team_winners[$div]=$name;
+                    }
+                }
+            }
+        }
+    }
+    foreach($teams as $team=>$numbers){
+        if($team == $team_winners[$div]){
+            $s=0;
+            foreach($numbers as $number => $shooters){
+                if($s<6){
+                    foreach($shooters as $name => $scores){
+                        array_push($team_winners_names[$div],$name);
+                        break;
+                    }
+                    $s++;
+                }
+            }
+        }
+    }
+}
+//echo json_encode($team_winners_names);
 //echo 'winners='.json_encode($individual_winners).', runner_up='.json_encode($individual_runner).', close='.json_encode($individual_close);
 //echo json_encode($lyas_arr);
 //echo json_encode($divisions);
