@@ -3,15 +3,89 @@
 	session_start();
 	$_SESSION['page']="leaders";
 	require "header.php"; // Use common header file so no need to repeat for each page
+	require "includes/scores.inc.php";
 ?>
 
 	<main>
 		<div class="w3-center ws-center" style="padding:10px">
 			<h1>Leader Board</h1>
 		</div>
+		<!-- Displays the Individual leaderboard -->
 		<div class="w3-wide w3-center" style="padding:10px">
-		<!-- Displays the leaderboard Google Sheet -->
-			<iframe title="LeaderFrame" width="100%" height="536" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTffb80J2aEHWbgrlJbljWvDduwYXecsoD6JKWYU9r19jN65GTRID0BQzWSliaM5klPO9APaMWT1As-/pubhtml?widget=true&amp;amp;headers=false"></iframe>
+			<button><h2>INDIVIDUAL WINNDERS</h2></button>
+		</div>
+		<div class="scores-container" id="individuals">
+			<table class="w3-table w3-center">
+				<thead>
+					<tr>
+						<th><h3>CLASS</h3></th>
+						<th colspan="2"><h3>HIGH AVERAGE</h3></th>
+						<th colspan="2"><h3>HIGH SINGLE</h3></th>
+						<th colspan="2"><h3>MOST IMPROVED</h3></th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php
+					foreach($individual_winners as $class=>$values){
+						echo '
+							<tr>
+								<td>'.$class.'</td>
+								<td>'.$individual_winners_name[$class]['avg'].'</td>
+								<td>'.number_format($values['avg'],1).'</td>
+								<td>'.$individual_winners_name[$class]['high'].'</td>
+								<td>'.$values['high'].'</td>
+								<td>'.$individual_winners_name[$class]['most_improv'].'</td>
+								<td>'.number_format($values['most_improv'],1).'</td>
+							</tr>
+						';
+					}
+				?>
+				</tbody>
+				<thead>
+					<tr>
+						<th colspan="7"><h3>RUNNERS UP</h3></th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+						foreach($individual_runner as $class=>$values){
+							echo '
+								<tr>
+									<td>'.$class.'</td>
+									<td>'.$individual_runner_name[$class]['avg'].'</td>
+									<td>'.number_format($values['avg'],1).'</td>
+									<td>'.$individual_runner_name[$class]['high'].'</td>
+									<td>'.$values['high'].'</td>
+									<td>'.$individual_runner_name[$class]['most_improv'].'</td>
+									<td>'.number_format($values['most_improv'],1).'</td>
+								</tr>
+							';
+						}
+					?>
+				</tbody>
+				<thead>
+					<tr>
+						<th colspan="7"><h3>CLOSING IN</h3></th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+						foreach($individual_close as $class=>$values){
+							echo '
+								<tr>
+									<td>'.$class.'</td>
+									<td>'.$individual_close_name[$class]['avg'].'</td>
+									<td>'.number_format($values['avg'],1).'</td>
+									<td>'.$individual_close_name[$class]['high'].'</td>
+									<td>'.$values['high'].'</td>
+									<td>'.$individual_close_name[$class]['most_improv'].'</td>
+									<td>'.number_format($values['most_improv'],1).'</td>
+								</tr>
+							';
+						}
+					?>
+				</tbody>
+			</table>
 		</div>
 	</main>
 <?php
