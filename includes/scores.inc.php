@@ -258,11 +258,11 @@ foreach($divisions as $div => $teams){
                     $class = 'F';
                 }
                 // add to the score array the necessary statistics
-                array_push($dum_scores, array('class'=>$class));
-                array_push($dum_scores, array('agg'=>$team_lya*$match_completed));
-                array_push($dum_scores, array('avg'=>$team_lya));
-                array_push($dum_scores, array('lya'=>$team_lya));
-                array_push($dum_scores, array('high'=>$team_lya));
+                $dum_scores += array('class'=>$class);
+                $dum_scores += array('agg'=>$team_lya*$match_completed);
+                $dum_scores += array('avg'=>$team_lya);
+                $dum_scores += array('lya'=>$team_lya);
+                $dum_scores += array('high'=>$team_lya);
                 // push the fake shooter, scores, and statistics to the divisions array
                 $divisions[$div][$team] += array($test_num=>array('DUMMY'=>$dum_scores));
                 // add the fake shooter's lya to the lyaa for the team

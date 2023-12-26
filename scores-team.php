@@ -129,7 +129,5 @@
                     </tr>
                 </tfoot>
             </table>
-            <br>
-            <table>
         ';
 ?>
