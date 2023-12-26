@@ -49,7 +49,9 @@
 					</table>
 					<br>
 				';
-				require 'scores-team.php';
+				foreach($teams as $name => $numbers){
+					require 'scores-team.php';
+				}
 				echo '
 					</div>
 				';

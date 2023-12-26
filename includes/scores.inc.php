@@ -318,27 +318,31 @@ foreach($divisions as $div=>$teams){
         for($y=1;$y<16;$y++){
             //echo json_encode($team_agg).'<br>';
             // average the team's weekly aggs over each week of the season and calculate the rolling 3 week handicap average       
-            if($y==1){
+            //echo $divisions[$div][$team]['lyaas'].'<br>';                    
+            if($y<$match_completed+1){
+                if($y==1){
                     $team_agg_agg += $team_agg['wk'.$y.'agg'];
                     //echo 'team_agg_agg='.$team_agg_agg.', $y='.$y.'<br>';
                     $team_agg_avg += array('wk'.$y.'agg_avg' => $team_agg_agg/$y);
                     $team_hand_avg += array('wk'.$y.'hand_avg' => $divisions[$div][$team]['lyaas']);
-                } else {
+                }elseif($y == 2){
                     $team_agg_agg += $team_agg['wk'.$y.'agg'];
                     $team_agg_avg += array('wk'.$y.'agg_avg' => $team_agg_agg/$y);
-                    //echo $divisions[$div][$team]['lyaas'].'<br>';                    
-                    if($y<$match_completed+1){
-                        if($y == 3){
-                            $team_hand_avg += array('wk'.$y.'hand_avg' => ($divisions[$div][$team]['lyaas']+$team_agg['wk'.($y-1).'agg']+$team_agg['wk'.($y-2).'agg'])/3);
-                        }elseif($y == 2){
-                            $team_hand_avg += array('wk'.$y.'hand_avg' => (($divisions[$div][$team]['lyaas']*2)+$team_agg['wk'.($y-1).'agg'])/3);
-                        }else{
-                            $team_hand_avg += array('wk'.$y.'hand_avg' => ($team_agg['wk'.($y-1).'agg']+$team_agg['wk'.($y-2).'agg']+$team_agg['wk'.($y-3).'agg'])/3);
-                        }
-                    }else{
-                        $team_hand_avg += array('wk'.$y.'hand_avg' => 0);
-                    }
+                    $team_hand_avg += array('wk'.$y.'hand_avg' => (($divisions[$div][$team]['lyaas']*2)+$team_agg['wk'.($y-1).'agg'])/3);
+                }elseif($y == 3){
+                    $team_agg_agg += $team_agg['wk'.$y.'agg'];
+                    $team_agg_avg += array('wk'.$y.'agg_avg' => $team_agg_agg/$y);
+                    $team_hand_avg += array('wk'.$y.'hand_avg' => ($divisions[$div][$team]['lyaas']+$team_agg['wk'.($y-1).'agg']+$team_agg['wk'.($y-2).'agg'])/3);
+                }else{
+                    $team_agg_agg += $team_agg['wk'.$y.'agg'];
+                    $team_agg_avg += array('wk'.$y.'agg_avg' => $team_agg_agg/$y);
+                    $team_hand_avg += array('wk'.$y.'hand_avg' => ($team_agg['wk'.($y-1).'agg']+$team_agg['wk'.($y-2).'agg']+$team_agg['wk'.($y-3).'agg'])/3);
                 }
+            }else{
+                $team_agg_agg += $team_agg['wk'.$y.'agg'];
+                $team_agg_avg += array('wk'.$y.'agg_avg' => 0);
+                $team_hand_avg += array('wk'.$y.'hand_avg' => 0);
+            }
         }
         // close out the team stats by adding them to the team in the divisions array
         $divisions[$div][$team] += array('wk_agg' => $team_agg);

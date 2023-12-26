@@ -2,22 +2,32 @@
     echo '
         <tr>
             <td>'.$number.'</td>
-            <td>'.$person.'</td>
     ';
-    foreach($scores as $wk => $values){
-        echo '<td';
-        if($values[1] == 1){
-            ' class="missed-score"';
-        }
-        echo '>'.$scores[0].'</td>';
+    foreach($shooters as $name => $scores){
+        echo '<td>'.$name.'</td>';
+        break;
     }
-    echo '
-            <td>agg</td>
-            <td>wks</td>
-            <td>avg</td>
-            <td>lya</td>
-            <td>cl</td>
-            <td>high</td>
+    foreach($shooters as $scores){
+        $wks = 0;
+        for($wk=1;$wk<16;$wk++){
+            echo '<td';
+            if($scores[$wk][1] == 1){
+                ' class="missed-score"';
+            }
+            echo '>'.$scores[$wk][0].'</td>';
+            if($scores[$wk][0] > 0){
+                $wks++;
+            }
+        }
+        echo '
+            <td>'.$scores['agg'].'</td>
+            <td>'.$wks.'</td>
+            <td>'.number_format($scores['avg'],1,'.','').'</td>
+            <td>'.number_format($scores['lya'],1,'.','').'</td>
+            <td>'.$scores['class'].'</td>
+            <td>'.$scores['high'].'</td>
         </tr>
     ';
+    }
+    
 ?>
