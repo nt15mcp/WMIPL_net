@@ -9,7 +9,7 @@
 		<?php require 'includes/scores.inc.php' ?>
 		<div>
 			<!-- Setup a selection box bar across the top of the page to select divisions for viewing -->
-			<div class="w3-bar w3-center w3-border w3-blue">
+			<div class="w3-bar w3-center w3-border scores-bar">
 				<label class="w3-text-black w3-bar-item">Select to View In Page</label>
 				<?php 
 					foreach ($divisions as $div=>$teams){
@@ -43,7 +43,7 @@
 					<table>
 						<thead>
 							<tr>
-								<th colspan="3"><h1>Division '.$div.'</h1></th>						
+								<th colspan="3" class="division-name"><h1>Division '.$div.'</h1></th>						
 							</tr>
 						</thead>
 					</table>

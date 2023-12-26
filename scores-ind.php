@@ -1,6 +1,6 @@
 <?php
     echo '
-        <tr>
+        <tr class="individual-row">
             <td>'.$number.'</td>
     ';
     foreach($shooters as $name => $scores){
@@ -11,7 +11,7 @@
         $wks = 0;
         for($wk=1;$wk<16;$wk++){
             echo '<td';
-            if($scores[$wk][1] == 1){
+            if($scores[$wk][2] == 1){
                 ' class="missed-score"';
             }
             echo '>'.$scores[$wk][0].'</td>';

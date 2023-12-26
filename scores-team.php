@@ -4,8 +4,7 @@
                 <thead>
                     <tr></tr>
                     <tr>
-                        <th scope="col"><h2>'.$name.'</h2></th>
-                        <th scope="col"></th>
+                        <th scope="col" colspan="2" class="team-name"><h2>'.$name.'</h2></th>
                         <th scope="col"><h3>Wk 1</h3></th>
                         <th scope="col"><h3>Wk 2</h3></th>
                         <th scope="col"><h3>Wk 3</h3></th>
