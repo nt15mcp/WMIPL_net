@@ -15,7 +15,7 @@
     <meta name="msapplication-TileImage" content="img/favicon-144.png"/>
   </head>
   <!-- At some point I'll want to change the background, it looks old -->
-  <body background="img/paper.gif" >
+  <body>
     
 	
 	<header>
