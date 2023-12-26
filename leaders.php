@@ -12,10 +12,10 @@
 		</div>
 		<!-- Displays the Individual leaderboard -->
 		<div class="w3-wide w3-center" style="padding:10px">
-			<button class="w3-bar-item"><h2>INDIVIDUAL WINNERS</h2></button>
-			<button class="w3-bar-item"><h2>TEAM WINNERS</h2></button>
+			<button class="w3-bar-item active-tab" id="individual_button" onclick="displayTab('individuals')"><h2>INDIVIDUAL WINNERS</h2></button>
+			<button class="w3-bar-item" id="team_button" onclick="displayTab('team')"><h2>TEAM WINNERS</h2></button>
 		</div>
-		<div class="scores-container" id="individuals">
+		<div class="scores-container active-content" id="individuals">
 			<table class="w3-table">
 				<thead>
 					<tr>
@@ -88,7 +88,7 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="scores-container" id="team">
+		<div class="scores-container tab-content" id="team">
 			<table class="w3-table">
 				<thead>
 					<tr>
@@ -121,6 +121,30 @@
 			</table>
 		</div>
 	</main>
+	<script type="text/javascript">
+		function displayTab(tabId){
+			let indBut = document.getElementById("individual_button");
+			let teamBut = document.getElementById("team_button");
+			let indTab = document.getElementById("individuals");
+			let teamTab = document.getElementById("team");
+			console.log(indBut.classList);
+			if(tabId == "individuals"){
+				if(teamBut.classList.contains("active-tab")){
+					indBut.classList.add("active-tab");
+					teamBut.classList.remove("active-tab");
+					indTab.classList.replace("tab-content","active-content");
+					teamTab.classList.replace("active-content","tab-content");
+				}
+			}else{
+				if(indBut.classList.contains("active-tab")){
+					teamBut.classList.add("active-tab");
+					indBut.classList.remove("active-tab");
+					teamTab.classList.replace("tab-content","active-content");
+					indTab.classList.replace("active-content","tab-content");
+				}
+			}
+		}
+	</script>
 <?php
 	require "footer.php"; // Use common footer file so no need to repeat for each page
 ?>

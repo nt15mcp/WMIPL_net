@@ -373,3 +373,6 @@ th{background-color: hsla(213,100%,91%,1); color:hsla(213,98%,40%,1);}
 .division-name{background-color:hsla(213,100%,61%,0.5);color:hsla(213,90%,12%,1);font-weight:bold;text-decoration:underline;}
 .scores-bar{background-color:hsla(213,95%,80%,1);}
 .missed-score{border: 1px solid; border-color:hsla(213,2%,18%,1);}
+.active-tab{background-color:hsla(213,100%,61%,0.5);}
+.active-content{display: block;}
+.tab-content{display: none;}
