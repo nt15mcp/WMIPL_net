@@ -77,4 +77,5 @@ $divisions[$division][$team][$number] = array($shooter => $scores);
  // free the result set from the stored procedure
 $conn -> next_result();
 
+
 ?>
