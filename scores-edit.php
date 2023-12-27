@@ -17,8 +17,9 @@ require "includes/scores-edit.inc.php";
 
 
 <main>
-<div class="button-container">
-        <button class="w3-button" onclick="submit()" >Submit</button>
+<div class="button-container w3-center">
+        <button class="w3-button w3-bar-item" onclick="submit()" >Submit</button>
+        <button class="w3-button w3-bar-item" onclick="reset()" >Reset</button>
 </div>
     <div class="scores-edit">
         <table class="w3-table">
@@ -115,6 +116,13 @@ require "includes/scores-edit.inc.php";
             }).then(function(data){
                 console.log("Request complete! Response:", data);
             });
+        }
+    }
+    function reset(){
+        let inputs = document.getElementsByTagName("input");
+        var i;
+        for(i=0;i<inputs.length;i++){
+            inputs[i].value = inputs[i].defaultValue;
         }
     }
 </script>
