@@ -17,21 +17,21 @@ require "includes/scores-edit.inc.php";
 
 
 <main>
-<div>
+<div class="button-container">
         <button class="w3-button" onclick="submit()" >Submit</button>
 </div>
     <div class="scores-edit">
         <table class="w3-table">
             <thead>
                 <tr>
-                    <th><h2>NUMBER</h2></th>
-                    <th><h2>NAME</h2></th>
+                    <th class="headcol"><h2>NUMBER</h2></th>
+                    <th class="headcol"><h2>NAME</h2></th>
                     <?php
                         for($q=0;$q<3;$q++){
-                            echo '<th class="qualifying"><h2>Q'.($q+1).'</h2></th>';
+                            echo '<th class="qualifying headrow"><h2>Q'.($q+1).'</h2></th>';
                         }
                         for($wk=0;$wk<15;$wk++){
-                            echo '<th class="season"><h2>wk'.($wk+1).'</h2></th>';
+                            echo '<th class="season headrow"><h2>Wk'.($wk+1).'</h2></th>';
                         }
                     ?>
                 </tr>
@@ -51,25 +51,27 @@ require "includes/scores-edit.inc.php";
                                     if(!is_string($shooters)){
                                         foreach($shooters as $name=>$scores){
                                             $shooter = $name;
-                                            echo '<th><h3>'.$name.'</th><h3>';
+                                            echo '<th><h3>'.$name.'</h3></th>';
                                             break;
                                         }
                                         for($wk=1;$wk<4;$wk++){
                                             if(array_key_exists('Q'.$wk,$scores)){
-                                                echo '<td><input name="'.$shooter.'_Q'.$wk.'" type="number" max="300" maxlength="3" step="1" width="4" defaultValue="'.$scores['Q'.$wk][0].'" value="'.$scores['Q'.$wk][0].'"></td>';
+                                                echo '<td><input name="'.$shooter.'_Q'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="'.$scores['Q'.$wk][0].'" value="'.$scores['Q'.$wk][0].'"></td>';
                                             } else {
-                                                echo '<td><input name="'.$shooter.'_Q'.$wk.'" type="number" max="300" maxlength="3" step="1" width="4" defaultValue="" value=""></td>';
+                                                echo '<td><input name="'.$shooter.'_Q'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="" value=""></td>';
                                             }
                                         }
                                         for($wk=1;$wk<16;$wk++){
                                             if(array_key_exists($wk,$scores)){
-                                                echo '<td><input name="'.$shooter.'_'.$wk.'" type="number" max="300" maxlength="3" step="1" width="4" defaultValue="'.$scores[$wk][0].'" value="'.$scores[$wk][0].'"></td>';
+                                                echo '<td><input name="'.$shooter.'_'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="'.$scores[$wk][0].'" value="'.$scores[$wk][0].'"></td>';
                                             } else {
-                                                echo '<td><input name="'.$shooter.'_'.$wk.'" type="number" max="300" maxlength="3" step="1" width="4" defaultValue="" value=""></td>';
+                                                echo '<td><input name="'.$shooter.'_'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="" value=""></td>';
                                             }
                                         }
                                     }else{
-                                        echo '<th><h3>'.$shooters.'</th></h3>';
+                                        if(is_string($shooters)){
+                                            echo '<th><h3>'.$shooters.'</h3></th>';
+                                        }
                                     }
                                     $s++;
                                 }
@@ -87,7 +89,7 @@ require "includes/scores-edit.inc.php";
         var i;
         var changedInputs = new Object();
         for(i=0;i<inputs.length;i++){
-            if(inputs[i].defaultValue != inputs[i].value){
+            if(inputs[i].defaultValue != inputs[i].value && inputs[i].checkValidity()){
                 changedInputs[inputs[i].name] = inputs[i].value;
             }
         }

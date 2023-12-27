@@ -36,7 +36,7 @@
                                 header("Location:../".$_SESSION['page'].".php?error=".mysqli_error($conn));
                                 exit();
                             } else {
-                                mysqli_stmt_bind_param($stmt, "i", $week);
+                                mysqli_stmt_bind_param($stmt, "s", $week);
                                 mysqli_stmt_execute($stmt);
                                 $result = mysqli_stmt_get_result($stmt);
                                 if($row = mysqli_fetch_assoc($result)) {
@@ -58,7 +58,7 @@
                                                     header("Location: ../".$_SESSION['page'].".php?error=".mysqli_error($conn));
                                                     exit();
                                                 } else {
-                                                    mysqli_stmt_bind_param($stmt, "iii", $score, $shooter_id, $match_id);
+                                                    mysqli_stmt_bind_param($stmt, "iii", $score, $shooter_id, $week_id);
                                                     if(!mysqli_stmt_execute($stmt)){
                                                         header("Location: ../".$_SESSION['page'].".php?error=".mysqli_error($conn));
                                                         exit();
@@ -73,7 +73,7 @@
                                                     header("Location: ../".$_SESSION['page'].".php?error=".mysqli_error($conn));
                                                     exit();
                                                 } else {
-                                                    mysqli_stmt_bind_param($stmt, "iii", $shooter_id, $match_id, $score);
+                                                    mysqli_stmt_bind_param($stmt, "iii", $shooter_id, $week_id, $score);
                                                     if(!mysqli_stmt_execute($stmt)){
                                                         header("Location: ../".$_SESSION['page'].".php?error=".mysqli_error($conn));
                                                         exit();
@@ -109,9 +109,7 @@
                     }
                 }
             }
-
-
-
         }
+        header("Location: ../".$_SESSION['page'].".php?edit_success");
     }
 ?>

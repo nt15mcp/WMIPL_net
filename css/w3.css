@@ -30,7 +30,7 @@ legend{color:inherit;display:table;max-width:100%;padding:0;white-space:normal}t
 ::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}
 /* End extract */
 html,body{font-family:Verdana,sans-serif;font-size:15px;line-height:1.5;height:100%;background-color:hsla(212,12%,82%,1);}html{overflow-x:hidden}
-h1,h2,h3,h4,h5,h6,.w3-slim,.w3-wide{font-family:"rubik",Arial,sans-serif}
+h1,h2,h3,h4,h5,h6,.w3-slim,.w3-wide{font-family:Verdana,sans-serif}
 h1{font-size:36px}h2{font-size:30px}h3{font-size:24px}h4{font-size:20px}h5{font-size:18px}h6{font-size:16px}
 .w3-serif{font-family:"Times New Roman",Times,serif}
 h1,h2,h3,h4,h5,h6{font-weight:400;margin:10px 0}.w3-wide{letter-spacing:4px}
@@ -364,7 +364,7 @@ input[type=checkbox].w3-check:disabled+.w3-validate,input[type=radio].w3-radio:d
 .w3-border-pale-red,.w3-hover-border-pale-red:hover{border-color:#ffe7e7!important}.w3-border-pale-green,.w3-hover-border-pale-green:hover{border-color:#e7ffe7!important}
 .w3-border-pale-yellow,.w3-hover-border-pale-yellow:hover{border-color:#ffffcc!important}.w3-border-pale-blue,.w3-hover-border-pale-blue:hover{border-color:#e7ffff!important}
 .scores-container{height:80vh; overflow:auto; width: 98%; border:1px solid; border-color:hsla(213,2%,18%,1);}
-th{background-color: hsla(213,100%,91%,1); color:hsla(213,98%,40%,1);}
+.scores-container th{background-color: hsla(213,100%,91%,1); color:hsla(213,98%,40%,1);}
 .individual-row:nth-child(odd) {background-color: hsla(213,100%,83%,1);}
 .odd-row{background-color: hsla(213,100%,83%,1);}
 .individual-row:nth-child(even) {background-color: hsla(213,35%,83%,1);}
@@ -376,4 +376,9 @@ th{background-color: hsla(213,100%,91%,1); color:hsla(213,98%,40%,1);}
 .active-tab{background-color:hsla(213,100%,61%,0.5);}
 .active-content{display: block;}
 .tab-content{display: none;}
-.scores-edit{overflow:auto; height:90vh;}
+.scores-edit{overflow:auto; height:85vh;padding:0px;}
+.button-container, .scores-edit th{background-color: hsla(213,35%,83%,1);padding:0px;border:0px;}
+.headcol {position:sticky;top:0;z-index:999;}
+.headrow {position:sticky;top:0;z-index:900}
+.scores-edit th:nth-child(1){position:sticky;left:0;}
+.scores-edit th:nth-child(2){position:sticky;left:145px;}
