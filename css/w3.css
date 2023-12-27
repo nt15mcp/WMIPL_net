@@ -376,11 +376,16 @@ input[type=checkbox].w3-check:disabled+.w3-validate,input[type=radio].w3-radio:d
 .active-tab{background-color:hsla(213,100%,61%,0.5);}
 .active-content{display: block;}
 .tab-content{display: none;}
-.scores-edit{overflow:auto; height:85vh;padding:0px; background-color:hsla(213,35%,78%,1)}
-.button-container, .scores-edit th{background-color: hsla(213,35%,83%,1);padding:0px;border:0px;}
-.headcol {position:sticky;top:0;z-index:999;}
-.headrow {position:sticky;top:0;z-index:900}
+.scores-edit{overflow:auto; height:85vh;padding:0px; background-color:hsla(213,35%,78%,0.6); max-width:fit-content;}
+.scores-edit h2{font-size:1.5em;}
+.scores-edit h3{font-size:1.3em;margin:0px;}
+.scores-edit td{font-size:1em;padding:0px;}
+.button-container, .scores-edit th{background-color: hsla(213,35%,80%,1);margin:0px;padding:0px;}
+.headcol {position:sticky;top:0;z-index:999;margin:10px;}
+.headrow {position:sticky;top:0;z-index:900;margin:10px;}
 .scores-edit th:nth-child(1){position:sticky;left:0;}
-.scores-edit th:nth-child(2){position:sticky;left:145px;}
+.scores-edit th:nth-child(2){position:sticky;left:81px;}
 .scores-edit tr:nth-child(even) th{background-color:hsla(213,35%,76%,1);}
 .scores-edit tr:nth-child(even) td{background-color:hsla(213,35%,73%,1);}
+.scores-edit .hide{display:none;}
+.scores-edit, .active{background-color:hsla(213,35%,85%,1);}

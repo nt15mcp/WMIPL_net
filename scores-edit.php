@@ -20,6 +20,8 @@ require "includes/scores-edit.inc.php";
 <div class="button-container w3-center">
         <button class="w3-button w3-bar-item" onclick="submit()" >Submit</button>
         <button class="w3-button w3-bar-item" onclick="reset()" >Reset</button>
+        <button class="w3-button w3-bar-item active" id="qual_view" onclick="qualifying()" >Show Qual</button>
+        <button class="w3-button w3-bar-item active" id="season_view" onclick="season()">Show Season</button>
 </div>
     <div class="scores-edit">
         <table class="w3-table">
@@ -57,16 +59,16 @@ require "includes/scores-edit.inc.php";
                                         }
                                         for($wk=1;$wk<4;$wk++){
                                             if(array_key_exists('Q'.$wk,$scores)){
-                                                echo '<td><input name="'.$shooter.'_Q'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="'.$scores['Q'.$wk][0].'" value="'.$scores['Q'.$wk][0].'"></td>';
+                                                echo '<td class="qualifying"><input name="'.$shooter.'_Q'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="'.$scores['Q'.$wk][0].'" value="'.$scores['Q'.$wk][0].'"></td>';
                                             } else {
-                                                echo '<td><input name="'.$shooter.'_Q'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="" value=""></td>';
+                                                echo '<td class="qualifying"><input name="'.$shooter.'_Q'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="" value=""></td>';
                                             }
                                         }
                                         for($wk=1;$wk<16;$wk++){
                                             if(array_key_exists($wk,$scores)){
-                                                echo '<td><input name="'.$shooter.'_'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="'.$scores[$wk][0].'" value="'.$scores[$wk][0].'"></td>';
+                                                echo '<td class="season"><input name="'.$shooter.'_'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="'.$scores[$wk][0].'" value="'.$scores[$wk][0].'"></td>';
                                             } else {
-                                                echo '<td><input name="'.$shooter.'_'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="" value=""></td>';
+                                                echo '<td class="season"><input name="'.$shooter.'_'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="" value=""></td>';
                                             }
                                         }
                                     }else{
@@ -74,10 +76,10 @@ require "includes/scores-edit.inc.php";
                                             echo '<th><h3>'.$shooters.'</h3></th>';
                                         }
                                         for($wk=1;$wk<4;$wk++){
-                                            echo '<td><input name="'.$shooters.'_Q'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="" value=""></td>';
+                                            echo '<td class="qualifying"><input name="'.$shooters.'_Q'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="" value=""></td>';
                                         }
                                         for($wk=1;$wk<16;$wk++){
-                                            echo '<td><input name="'.$shooters.'_'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="" value=""></td>';
+                                            echo '<td class="season"><input name="'.$shooters.'_'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="" value=""></td>';
                                         }
                                     }
                                     $s++;
@@ -123,6 +125,39 @@ require "includes/scores-edit.inc.php";
         var i;
         for(i=0;i<inputs.length;i++){
             inputs[i].value = inputs[i].defaultValue;
+        }
+    }
+
+    function qualifying(){
+        let qual = document.getElementById("qual_view");
+        let quals = document.getElementsByClassName("qualifying");
+        var i;
+        if(qual.classList.contains("active")){
+            qual.classList.remove("active");
+            for(i=0;i<quals.length;i++){
+                quals[i].classList.add("hide");
+            }
+        } else {
+            qual.classList.add("active");
+            for(i=0;i<quals.length;i++){
+                quals[i].classList.remove("hide");
+            }
+        }
+    }
+    function season(){
+        let season = document.getElementById("season_view");
+        let seasons = document.getElementsByClassName("season");
+        var i;
+        if(season.classList.contains("active")){
+            season.classList.remove("active");
+            for(i=0;i<seasons.length;i++){
+                seasons[i].classList.add("hide");
+            }
+        } else {
+            season.classList.add("active");
+            for(i=0;i<seasons.length;i++){
+                seasons[i].classList.remove("hide");
+            }
         }
     }
 </script>
