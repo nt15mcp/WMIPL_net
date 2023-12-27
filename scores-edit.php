@@ -72,6 +72,12 @@ require "includes/scores-edit.inc.php";
                                         if(is_string($shooters)){
                                             echo '<th><h3>'.$shooters.'</h3></th>';
                                         }
+                                        for($wk=1;$wk<4;$wk++){
+                                            echo '<td><input name="'.$shooters.'_Q'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="" value=""></td>';
+                                        }
+                                        for($wk=1;$wk<16;$wk++){
+                                            echo '<td><input name="'.$shooters.'_'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="" value=""></td>';
+                                        }
                                     }
                                     $s++;
                                 }
@@ -83,6 +89,7 @@ require "includes/scores-edit.inc.php";
         </table>
     </div>
 </main>
+<?php include_once "includes/scores-handler.inc.php" ?>
 <script type="text/javascript">
     function submit(){
         let inputs = document.getElementsByTagName("input");
@@ -91,8 +98,13 @@ require "includes/scores-edit.inc.php";
         for(i=0;i<inputs.length;i++){
             if(inputs[i].defaultValue != inputs[i].value && inputs[i].checkValidity()){
                 changedInputs[inputs[i].name] = inputs[i].value;
+            } else {
+                if(!inputs[i].checkValidity()){
+                    inputs[i].value = inputs[i].defaultValue;
+                }
             }
         }
+        console.log(changedInputs);
         if(Object.getOwnPropertyNames(changedInputs).length > 0){
             fetch("includes/scores-handler.inc.php", {
                 "method": "POST",
