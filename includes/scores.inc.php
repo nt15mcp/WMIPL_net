@@ -383,6 +383,19 @@ foreach($divisions as $div => $teams){
 }
 
 // calculate wins for each team
+$tie_breakers = array();
+$result = $conn->query("CALL current_tie_breaker()");
+while($row = $result->fetch_assoc()){
+    if(array_key_exists($row['teams'],$tie_breakers)){
+        $tie_breakers[$row['teams']] += $row['week'];
+    } else {
+        $tie_breakers += array($row['teams']=>$row['week']);
+    }
+}
+//echo json_encode($scores);
+// free the result set from the stored procedure
+$conn -> next_result();
+
 foreach($divisions as $div => $teams){
     $div_teams = array_keys($teams);
     foreach($teams as $team => $numbers){
@@ -394,7 +407,25 @@ foreach($divisions as $div => $teams){
                 if($numbers['wk_total']['wk'.$wk.'total'] > $teams[$opp_team]['wk_total']['wk'.$wk.'total']){
                     $wins += array('wk'.$wk.'win' => 1);
                 } else {
-                    $wins += array('wk'.$wk.'win' => 0);
+                    if(array_key_exists($team,$tie_breakers)){
+                        if(is_string($tie_breakers[$team])){
+                            if($tie_breakers[$team] == $wk){
+                                $wins += array('wk'.$wk.'win' => 1);
+                            } else {
+                                $wins += array('wk'.$wk.'win' => 0);
+                            }
+                        } else {
+                            foreach($tie_breakers[$team] as $wek){
+                                if($wek == $wk){
+                                    $wins += array('wk'.$wk.'win' => 1);
+                                } else {
+                                    $wins += array('wk'.$wk.'win' => 0);
+                                }
+                            }
+                        }
+                    } else {
+                        $wins += array('wk'.$wk.'win' => 0);
+                    }
                 }
             } else {
                 $wins += array('wk'.$wk.'win' => 0);
