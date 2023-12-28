@@ -27,6 +27,7 @@ while($row = $result->fetch_assoc() ){
         }
     }
 }
+$roster = $divisions;
 // free the result set from the stored procedure calll
 $conn -> next_result();
 // $divisions is now an array of [division:[team:[shooter_num, shooter_name],[shooter_num, shooter_name]],[team:[shooter_num, shooter_name],[shooter_num, shooter_name]]],division:[team:[shooter_num, shooter_name],[shooter_num, shooter_name]],[team:[shooter_num, shooter_name],[shooter_num, shooter_name]]]]

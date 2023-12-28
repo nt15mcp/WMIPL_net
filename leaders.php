@@ -13,7 +13,7 @@
 		<!-- Displays the Individual leaderboard -->
 		<div class="w3-wide w3-center" style="padding:10px">
 			<button class="w3-bar-item active-tab" id="individual_button" onclick="displayTab('individuals')"><h2>INDIVIDUAL WINNERS</h2></button>
-			<button class="w3-bar-item" id="team_button" onclick="displayTab('team')"><h2>TEAM WINNERS</h2></button>
+			<button class="w3-bar-item inactive-tab" id="team_button" onclick="displayTab('team')"><h2>TEAM WINNERS</h2></button>
 		</div>
 		<div class="scores-container active-content" id="individuals">
 			<table class="w3-table">
@@ -130,15 +130,15 @@
 			console.log(indBut.classList);
 			if(tabId == "individuals"){
 				if(teamBut.classList.contains("active-tab")){
-					indBut.classList.add("active-tab");
-					teamBut.classList.remove("active-tab");
+					indBut.classList.replace("inactive-tab","active-tab");
+					teamBut.classList.replace("active-tab","inactive-tab");
 					indTab.classList.replace("tab-content","active-content");
 					teamTab.classList.replace("active-content","tab-content");
 				}
 			}else{
 				if(indBut.classList.contains("active-tab")){
-					teamBut.classList.add("active-tab");
-					indBut.classList.remove("active-tab");
+					teamBut.classList.replace("inactive-tab","active-tab");
+					indBut.classList.replace("active-tab","inactive-tab");
 					teamTab.classList.replace("tab-content","active-content");
 					indTab.classList.replace("active-content","tab-content");
 				}
