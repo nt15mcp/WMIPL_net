@@ -110,7 +110,7 @@ $divisions[$division][$team][$number] = array($shooter => $scores);
 $conn -> next_result();
 
 // divisions should now have scores attached to each shooter's name
-//echo json_encode($divisions); // check your work!
+// echo json_encode($divisions); // check your work!
 
 // start with a fresh array
 $lyas_arr = array();
@@ -174,7 +174,7 @@ foreach($divisions as $div => $teams){
                 $wks = 0;
                 for($wk=1;$wk< 16;$wk++){
                     if(!array_key_exists($wk,$scores)){
-                        if($wk < $match_completed){
+                        if($wk <= $match_completed){
                             //echo json_encode($scores).'<br>';
                             $missed_score = round(($agg + $divisions[$div][$team][$number][$shooter]['lya'])/$wk)-10;
                             $divisions[$div][$team][$number][$shooter] += array($wk=>array($missed_score,'0','1'));
