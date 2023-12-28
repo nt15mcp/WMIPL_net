@@ -39,6 +39,7 @@
         }
         echo '
                 </tbody>
+                <tr class="empty-row"></tr>
                 <tfoot>
                     <tr>
                         <td></td>
@@ -128,6 +129,7 @@
                     </tr>
                 </tfoot>
             </table>
+            <br>
             <br>
         ';
 ?>

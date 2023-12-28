@@ -325,7 +325,7 @@ foreach($divisions as $div=>$teams){
             //echo json_encode($team_agg).'<br>';
             // average the team's weekly aggs over each week of the season and calculate the rolling 3 week handicap average       
             //echo $divisions[$div][$team]['lyaas'].'<br>';                    
-            if($y<$match_completed+1){
+            if($y<=$match_completed+1){
                 if($y==1){
                     $team_agg_agg += $team_agg['wk'.$y.'agg'];
                     //echo 'team_agg_agg='.$team_agg_agg.', $y='.$y.'<br>';
