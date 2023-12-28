@@ -6,7 +6,7 @@
 ?>
 
 	<main>
-		<div class="w3-center w3-wide" style="padding:10px">
+		<div class="" style="padding:20px">
 			<?php
 				require "includes/textarea.inc.php"; // Get text area from database for display
 				

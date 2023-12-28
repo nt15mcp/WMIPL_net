@@ -8,7 +8,7 @@ if (isset($_POST['text-submit'])) {
 	$user = $_SESSION['userID'];
 	$content = $_POST['content'];
 	
-	$sql = "INSERT INTO pages (page, content, executive_id, created_at) VALUES (?, ?, ?, Now())";
+	$sql = "INSERT INTO pages (page, content, user_id, created_at) VALUES (?, ?, ?, Now())";
 	$stmt = mysqli_stmt_init($conn);
 	if (!mysqli_stmt_prepare($stmt, $sql)) {
 		header("Location: ../".$_SESSION['page'].".php?error=sqlierror");

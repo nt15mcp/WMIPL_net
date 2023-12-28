@@ -3,9 +3,9 @@
 	session_start();
 	$_SESSION['page']="contact";
 	require "header.php"; // Use common header file so no need to repeat for each page
-
+?>
 	<main>
-		<div class="w3-center w3-wide" style="padding:10px">
+		<div class="w3-wide" style="padding:10px">
 			<?php
 				require "includes/textarea.inc.php"; // Get text area from database for display
 				
