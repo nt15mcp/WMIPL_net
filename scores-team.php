@@ -2,7 +2,6 @@
         echo '
             <table class="w3-table">
                 <thead>
-                    <tr></tr>
                     <tr>
                         <th scope="col" colspan="2" class="team-name"><h2>'.$name.'</h2></th>
                         <th scope="col"><h3>Wk1</h3></th>
@@ -60,8 +59,8 @@
         }
         echo '
                         <td colspan="2"></td>
-                        <th scope="row"><h3>LYAA</h3></th>
-                        <td>'.number_format($numbers['lyaas'],1,'.','').'</td>
+                        <th scope="row"><h3>LYAA:</h3></th>
+                        <th><h3>'.number_format($numbers['lyaas'],1,'.','').'</h3></th>
                         <td colspan="2"></td>
                     </tr>
                     <tr>
@@ -111,8 +110,8 @@
         }
         echo '
                         <td colspan="2"></td>
-                        <th scope="row" colspan="2"><h3>TOTAL WINS</h3></th>
-                        <td>'.$numbers['team_wins'].'</td>
+                        <th scope="row" colspan="2"><h3>TOTAL WINS:</h3></th>
+                        <th><h3>'.$numbers['team_wins'].'</h3></th>
                         <td></td>
                     </tr>
                     <tr>
