@@ -18,7 +18,7 @@ if (isset($_POST["new-password-submit"])) {
 	$currentDate = date("U");
 	
 	require 'dbh.inc.php';
-	$sql = "SELECT * FROM Pwdreset WHERE pwdResetSelector=? AND pwdResetExpires>=?";
+	$sql = "SELECT * FROM pwdreset WHERE pwdResetSelector=? AND pwdResetExpires>=?";
 	$stmt = mysqli_stmt_init($conn);
 	if (!mysqli_stmt_prepare($stmt, $sql)) {
 		header("Location: ../signup.php?error=sqlierror");
@@ -45,7 +45,7 @@ if (isset($_POST["new-password-submit"])) {
 				$email = $row["pwdResetEmail"];
 				$hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 				
-				$sql = "UPDATE Login SET Password=? WHERE Email=?";
+				$sql = "UPDATE logins SET password=? WHERE email=?";
 				$stmt = mysqli_stmt_init($conn);
 				if (!mysqli_stmt_prepare($stmt, $sql)) {
 					header("Location: ../signup.php?error=sqlierror");
@@ -56,7 +56,7 @@ if (isset($_POST["new-password-submit"])) {
 					mysqli_stmt_execute($stmt);
 				}
 				
-				$sql = "DELETE FROM Pwdreset WHERE pwdResetEmail=?";
+				$sql = "DELETE FROM pwdreset WHERE pwdResetEmail=?";
 				$stmt = mysqli_stmt_init($conn);
 				if (!mysqli_stmt_prepare($stmt, $sql)) {
 					header("Location: ../signup.php?error=sqlierror");

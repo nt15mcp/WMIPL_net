@@ -29,7 +29,7 @@ if (isset($_POST['reset-request-submit'])) {
 			$token = random_bytes(32);
 			$url = "https://www.wmipl.net/createnewpassword.php?selector=".$selector."&validator=".bin2hex($token);
 			$expires = date("U") + 1800;			
-			$sql = "DELETE FROM Pwdreset WHERE pwdResetEmail=?";
+			$sql = "DELETE FROM pwdreset WHERE pwdResetEmail=?";
 			$stmt = mysqli_stmt_init($conn);
 			if (!mysqli_stmt_prepare($stmt, $sql)) {
 				header("Location: ../pwdreset.php?reset=sqlierror");
@@ -39,7 +39,7 @@ if (isset($_POST['reset-request-submit'])) {
 				mysqli_stmt_bind_param($stmt, "s", $userEmail);
 				mysqli_stmt_execute($stmt);
 			}
-			$sql = "INSERT INTO Pwdreset (pwdResetEmail, pwdResetSelector, pwdResetToken, pwdResetExpires) VALUES (?, ?, ?, ?)";
+			$sql = "INSERT INTO pwdreset (pwdResetEmail, pwdResetSelector, pwdResetToken, pwdResetExpires) VALUES (?, ?, ?, ?)";
 			$stmt = mysqli_stmt_init($conn);
 			if (!mysqli_stmt_prepare($stmt, $sql)) {
 				header("Location: ../pwdreset.php?reset=sqlierror");
