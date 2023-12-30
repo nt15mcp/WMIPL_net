@@ -7,7 +7,7 @@
 ?>
 
 	<main>
-		<div class="w3-center ws-center" style="padding:10px">
+		<div class="w3-center leader-container" style="padding:10px">
 			<h1>Leader Board</h1>
 		</div>
 		<!-- Displays the Individual leaderboard -->
@@ -16,7 +16,7 @@
 			<button class="w3-bar-item inactive-tab" id="team_button" onclick="displayTab('team')"><h2>TEAM WINNERS</h2></button>
 		</div>
 		<div class="scores-container active-content" id="individuals">
-			<table class="w3-table">
+			<table class="w3-table winners">
 				<thead>
 					<tr>
 						<th><h3>CLASS</h3></th>
@@ -29,7 +29,7 @@
 				<?php
 					foreach($individual_winners as $class=>$values){
 						echo '
-							<tr>
+							<tr class="winner-row">
 								<td>'.$class.'</td>
 								<td>'.$individual_winners_name[$class]['avg'].'</td>
 								<td>'.number_format($values['avg'],1).'</td>
@@ -51,7 +51,7 @@
 					<?php
 						foreach($individual_runner as $class=>$values){
 							echo '
-								<tr>
+								<tr class="winner-row">
 									<td>'.$class.'</td>
 									<td>'.$individual_runner_name[$class]['avg'].'</td>
 									<td>'.number_format($values['avg'],1).'</td>
@@ -73,7 +73,7 @@
 					<?php
 						foreach($individual_close as $class=>$values){
 							echo '
-								<tr>
+								<tr class="winner-row">
 									<td>'.$class.'</td>
 									<td>'.$individual_close_name[$class]['avg'].'</td>
 									<td>'.number_format($values['avg'],1).'</td>
@@ -110,7 +110,7 @@
 					<?php
 						$divs = array_keys($team_winners_names);
 						for($n=0;$n<count($team_winners_names[$divs[0]]);$n++){
-							echo '<tr>';
+							echo '<tr class="winner-row">';
 							for($m=0;$m<count($divs);$m++){
 								echo '<td>'.$team_winners_names[$divs[$m]][$n].'</td>';
 							}

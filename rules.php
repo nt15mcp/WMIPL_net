@@ -6,7 +6,7 @@
 ?>
 
 	<main>
-		<div class="" style="padding:20px">
+		<div class="rules-container" style="padding:20px">
 			<?php
 				require "includes/textarea.inc.php"; // Get text area from database for display
 				

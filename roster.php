@@ -6,7 +6,7 @@
 ?>
 
 	<main>
-		<div class="w3-center">
+		<div class="w3-center roster-container">
 			<h1>ROSTER</h1>
 		</div>
 		<div class="w3-wide w3-center scores-container roster">
@@ -42,7 +42,7 @@
 						array_multisort($roster_by_last_name);
 						for($x=0;$x<count($roster_by_last_name);$x++){
 							echo'
-											<tr class="individual-row">
+											<tr class="roster-row">
 												<td>'.$roster_by_last_name[$x][0].'</td>
 												<td>'.$roster_by_last_name[$x][1].'</td>
 												<td>'.$roster_by_last_name[$x][2].'</td>

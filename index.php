@@ -6,7 +6,7 @@
 ?>
 
 	<main>
-		<div class="w3-wide" style="padding:10px; margin:auto; width:95%; overflow:auto;">
+		<div class="home-container" style="padding:10px; margin:auto; width:95%; overflow:auto;">
 			<?php
 				require "includes/textarea.inc.php"; // Get text area from database for display
 				

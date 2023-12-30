@@ -6,7 +6,7 @@
 ?>
 
 	<main>
-		<div class="w3-center" style="padding:10px">
+		<div class="w3-center schedule-container" style="padding:10px">
 			<?php
 				require "includes/textarea.inc.php"; // Get text area from database for display
 				
