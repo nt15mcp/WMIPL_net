@@ -31,9 +31,11 @@
         ';
         $s=0;
         foreach($numbers as $number => $shooters){
-            if($s<6){
-                require 'scores-ind.php';
-                $s++;
+            if(is_numeric($number)){
+                if($s<6){
+                    require 'scores-ind.php';
+                    $s++;
+                }
             }
         }
         echo '
