@@ -13,6 +13,8 @@
             echo '<td';
             if($scores[$wk][2] == 1){
                 echo ' class="missed-score"';
+            }elseif($scores[$wk][1] == 1){
+                echo ' class="changed-score"';
             }
             echo '>'.$scores[$wk][0].'</td>';
             if($scores[$wk][0] > 0){

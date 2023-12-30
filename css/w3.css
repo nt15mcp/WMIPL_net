@@ -374,6 +374,7 @@ input[type=checkbox].w3-check:disabled+.w3-validate,input[type=radio].w3-radio:d
 .division-name{background-color:hsla(213,100%,61%,0.5);color:hsla(213,90%,12%,1);font-weight:bold;text-decoration:underline;}
 .scores-bar{background-color:hsla(213,95%,80%,1);}
 .missed-score{border: 1px solid; border-color:hsla(213,2%,18%,1);}
+.changed-score{font-weight:bold}
 .active-tab{background-color:hsla(213,100%,61%,0.5);}
 .inactive-tab{background-color: hsla(213,84%,87%,1);}
 .active-content{display: block;}
