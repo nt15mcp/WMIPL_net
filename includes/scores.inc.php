@@ -280,7 +280,7 @@ foreach($divisions as $div => $teams){
         // replace the team's lyaa with the new one including the fake shooters
         $divisions[$div][$team]['lyaas'] = $lyas;
         // sort it for readability
-        ksort($divisions[$div][$team]);
+        //ksort($divisions[$div][$team]);
     }
 }
 
