@@ -61,7 +61,8 @@ if (isset($_POST['reset-request-submit'])) {
 				$headers .= "Content-type: text/html\r\n";
 				
 				//Bring in sensitive data
-				$ini = parse_ini_file('/home/u437830502/domains/wmipl.net/Configs/app.ini')
+				// $ini = parse_ini_file('/home/u437830502/domains/wmipl.net/Configs/app.ini');
+				$ini = parse_ini_file('C:\xampp\htdocs\wmipl_net\app.ini');
 				//Create a new PHPMailer instance
 				$mail = new PHPMailer;
 				//Tell PHPMailer to use SMTP
