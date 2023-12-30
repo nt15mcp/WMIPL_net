@@ -1,7 +1,6 @@
-SetEnv PHPRC "C:/Users/NT15MCP/OneDrive/WMIPL/WMIPL.net/git_repository"
 RewriteEngine On
 RewriteRule ^(.*)\.html$ $1.php [L]
-
+RewriteRule ^(.*)\.[\d]{10}\.(css|js)$ $1.$2 [L]
 
 
 

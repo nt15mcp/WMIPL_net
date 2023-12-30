@@ -5,7 +5,26 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 	<meta name="theme-color" content="#000000"/>
-	<link href="css/w3.css" rel="stylesheet" type="text/css" media="all"/>
+	<?php
+	/**
+	*  Given a file, i.e. /css/base.css, replaces it with a string containing the
+	*  file's mtime, i.e. /css/base.1221534296.css.
+	*
+	*  @param $file  The file to be loaded. works on all type of paths.
+	*/
+	function auto_version($file) {
+	if($file[0] !== '/') {
+		$file = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', dirname($_SERVER['PHP_SELF'])), '/') . '/' . $file;
+	}
+	
+	if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $file))
+	return $file;
+	
+	$mtime = filemtime($_SERVER['DOCUMENT_ROOT'] . $file);
+	return preg_replace('{\\.([^./]+)$}', ".$mtime.\$1", $file);
+	}
+	?>
+	<link href="<?php echo auto_version('css/w3.css')?>" rel="stylesheet" type="text/css" media="all"/>
 	<script type="text/javascript" src="ckeditor/ckeditor.js"></script>
 	<title id="pageTitle">WMIPL</title>
 	<link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png"/>
