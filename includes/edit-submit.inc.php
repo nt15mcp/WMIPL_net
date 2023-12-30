@@ -8,11 +8,11 @@ if(isset($_POST['edit-submit'])){
 		}	
 	}
 	If(isset($_POST['phonesec'])){
-		if(strlen(preg_replace("/[^0-9]/","",$_POST['phone'])) < 7) || strlen(preg_replace("/[^0-9]/","",$_POST['phone'])) > 11) || strlen(strlen(preg_replace("/[^0-9]/","",$_POST['phone'])) == 9 ) {
+		if(strlen(preg_replace("/[^0-9]/","",$_POST['phone'])) < 7 || strlen(preg_replace("/[^0-9]/","",$_POST['phone'])) > 11 || strlen(preg_replace("/[^0-9]/","",$_POST['phone'])) == 9)  {
 			header("Location: ../edit.php?error=invalidsecphone");
 			exit();
 		}
-		if(strlen(preg_replace("/[^0-9]/","",$_POST['phone'])) == 11)) && (substr(preg_replace("/[^0-9]/","",$_POST['phone']),0,1) != 1) {
+		if(strlen(preg_replace("/[^0-9]/","",$_POST['phone'])) == 11 && substr(preg_replace("/[^0-9]/","",$_POST['phone']),0,1) != 1) {
 			header("Location: ../edit.php?error=invalidsecphone");
 			exit();
 		}
@@ -24,7 +24,11 @@ if(isset($_POST['edit-submit'])){
 	$_SESSION['firstname'] = $_POST['firstname'];
 	$_SESSION['middlename'] = $_POST['middlename'];
 	$_SESSION['lastname'] = $_POST['lastname'];
-	$_SESSION['phone'] = if(strlen(preg_replace("/[^0-9]/", "", $_POST['phone'])) > 10){substr(preg_replace("/[^0-9]/", "", $_POST['phone']),1);}else{preg_replace("/[^0-9]/", "", $_POST['phone']);}
+	if(strlen(preg_replace("/[^0-9]/", "", $_POST['phone'])) > 10){
+		$_SESSION['phone'] = substr(preg_replace("/[^0-9]/", "", $_POST['phone']),1);
+	}else{
+		$_SESSION['phone'] = preg_replace("/[^0-9]/", "", $_POST['phone']);
+	}
 	$_SESSION['street'] = $_POST['street'];
 	$_SESSION['street2'] = $_POST['street2'];
 	$_SESSION['city'] = $_POST['city'];
