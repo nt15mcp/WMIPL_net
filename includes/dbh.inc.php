@@ -10,7 +10,7 @@
 // Parse the INI configuration file to retrieve database connection details
 //$ini = parse_ini_file('/home/u437830502/domains/wmipl.net/Configs/app.ini');
 // Alternative path for local development (uncomment if needed)
- $ini = parse_ini_file('C:\xampp\htdocs\wmipl_net\app.ini');
+$ini = parse_ini_file('C:\xampp\htdocs\wmipl_net\app.ini');
 
 // Retrieve database connection parameters from the parsed INI file
 $servername = $ini['db_server'];

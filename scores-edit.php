@@ -38,6 +38,7 @@ require "includes/scores-edit.inc.php";
         <button class="w3-button w3-bar-item" onclick="reset()" >Reset</button>
         <button class="w3-button w3-bar-item active" id="qual_view" onclick="qualifying()" >Show Qual</button>
         <button class="w3-button w3-bar-item active" id="season_view" onclick="season()">Show Season</button>
+        <button class="w3-button w3-bar-item" onclick="declare_tie_breaker()" >Tie-Breaker Entry</button>
 </div>
     <div class="scores-edit">
         <!-- Table for displaying editable scores data -->
@@ -59,10 +60,12 @@ require "includes/scores-edit.inc.php";
             </thead>
             <tbody>
                 <?php
+                    $teams_arr = array();
                     foreach($divisions as $teams){
-                        foreach($teams as $numbers){
+                        foreach($teams as $team => $numbers){
                             $s=0;
                             $shooter = '';
+                            array_push($teams_arr,$team);
                             foreach($numbers as $number=>$shooters){
                                 if($s<6){
                                     echo '
@@ -110,10 +113,37 @@ require "includes/scores-edit.inc.php";
         </table>
     </div>
 </main>
+<container id="popup-window">
+    <h1>Select the Tie Breaker winner</h1>
+    <br>
+    <br>
+    <label for="teams">Choose the winning team</label>
+    <select id="teams" name="teams">
+    <?php
+        foreach($teams_arr as $team){
+            echo '<option value="'.$team.'">'.$team.'</option>';
+        }
+    ?>
+    </select>
+    <br>
+    <label for="weeks">Choose the week</label>
+    <select id="weeks" name="weeks">
+    <?php
+        for($wk=1;$wk<16;$wk++){
+            echo '<option value="'.$wk.'">'.$wk.'</option>';
+        }
+    ?>
+    </select>
+    <br>
+    <button id="submit" onclick="submitTieBreaker()">Submit</button>
+    <button id="cancel" onclick="closePopup()">Cancel</button>
+</container>
 
 <?php 
     // Include scores handler for processing score changes
-    include_once "includes/scores-handler.inc.php" 
+    include_once "includes/scores-handler.inc.php"; 
+    // Include tie breaker handler
+    include_once "includes/scores-tie-breaker.inc.php";
 ?>
 
 <script type="text/javascript">
@@ -191,5 +221,30 @@ require "includes/scores-edit.inc.php";
                 seasons[i].classList.remove("hide");
             }
         }
+    }
+
+    // Get the elements by their ID
+    const popupWindow = document.getElementById("popup-window");
+    // Show the pop-up window when the link is clicked
+    function declare_tie_breaker(){
+        popupWindow.style.display = "block";
+    }
+    // Hide the pop-up window when the close button is clicked
+    function closePopup(){
+        popupWindow.style.display = "none";
+    }
+    function submitTieBreaker(){
+        let team = document.getElementById("teams").value;
+        let week = document.getElementById("weeks").value;
+        fetch("includes/scores-tie-breaker.inc.php", {
+                "method": "POST",
+                "headers": {"Content-type":"application/json"},
+                "body": JSON.stringify({"team": team,"week": week})
+            }).then(function(response){
+                return response.text();
+            }).then(function(data){
+                console.log("Request complete! Response:", data);
+                closePopup();
+            });
     }
 </script>

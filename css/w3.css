@@ -412,3 +412,19 @@ th.sort-by:after {border-top-color: #666;margin-top: 1px;}
 .roster-container h1{color:hsla(213,98%,30%,1);}
 .home-container h1{color:hsla(213,98%,30%,1);}
 .home-container {color:hsla(213,96%,9%,1);}
+#popup-window{
+    text-align: center;
+    position: fixed;
+    width: 600px;
+    height: 250px;
+    background: hsla(213,35%,88%,1);
+    border: 1px solid black;
+    padding: 10px;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    display: none;
+}
