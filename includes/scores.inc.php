@@ -196,55 +196,57 @@ foreach($divisions as $div => $teams){
     foreach($teams as $team => $numbers){
         $lyas = 0;
         foreach($numbers as $number => $shooters){
-            $s=0;
-            foreach($shooters as $shooter => $scores){
-                $agg = 0;
-                $high = 0;
-                $wks = 0;
-                for($wk=1;$wk< 16;$wk++){
-                    if(!array_key_exists($wk,$scores)){
-                        if($wk <= $match_completed){
-                            $missed_score = round(($agg + $divisions[$div][$team][$number][$shooter]['lya'])/$wk)-10;
-                            $divisions[$div][$team][$number][$shooter] += array($wk=>array($missed_score,'0','1'));
-                            $agg += $missed_score;
-                            if($high < $missed_score){
-                                $high = $missed_score;
+            if(is_numeric($number)){
+                $s=0;
+                foreach($shooters as $shooter => $scores){
+                    $agg = 0;
+                    $high = 0;
+                    $wks = 0;
+                    for($wk=1;$wk< 16;$wk++){
+                        if(!array_key_exists($wk,$scores)){
+                            if($wk <= $match_completed){
+                                $missed_score = round(($agg + $divisions[$div][$team][$number][$shooter]['lya'])/$wk)-10;
+                                $divisions[$div][$team][$number][$shooter] += array($wk=>array($missed_score,'0','1'));
+                                $agg += $missed_score;
+                                if($high < $missed_score){
+                                    $high = $missed_score;
+                                }
+                                $wks++;
+                            } else {
+                                $divisions[$div][$team][$number][$shooter] += array($wk=>array('0','0','0'));
                             }
-                            $wks++;
                         } else {
-                            $divisions[$div][$team][$number][$shooter] += array($wk=>array('0','0','0'));
-                        }
-                    } else {
-                        array_push($divisions[$div][$team][$number][$shooter][$wk],'0');
-                        if($high < $scores[$wk][0]){
-                            $high = $scores[$wk][0];
-                        }
-                        $agg += $scores[$wk][0];
-                        if($scores[$wk][0] > 0){
-                            $wks++;
+                            array_push($divisions[$div][$team][$number][$shooter][$wk],'0');
+                            if($high < $scores[$wk][0]){
+                                $high = $scores[$wk][0];
+                            }
+                            $agg += $scores[$wk][0];
+                            if($scores[$wk][0] > 0){
+                                $wks++;
+                            }
                         }
                     }
+                    if($scores['lya'] > $classes['A']){
+                        $class = 'A';
+                    }elseif($scores['lya'] > $classes['B']){
+                        $class = 'B';
+                    }elseif($scores['lya'] > $classes['C']){
+                        $class = 'C';
+                    }elseif($scores['lya'] > $classes['D']){
+                        $class = 'D';
+                    }elseif($scores['lya'] > $classes['E']){
+                        $class = 'E';
+                    }else{
+                        $class = 'F';
+                    }
+                    $avg = (($agg + $divisions[$div][$team][$number][$shooter]['lya'])/($wks+1));
+                    $divisions[$div][$team][$number][$shooter] += array('agg'=>$agg);
+                    $divisions[$div][$team][$number][$shooter] += array('avg'=>$avg);
+                    $divisions[$div][$team][$number][$shooter] += array('high'=>$high);
+                    $divisions[$div][$team][$number][$shooter] += array('class'=>$class);
+                    ksort($divisions[$div][$team][$number][$shooter]);
+                    $lyas += $scores['lya'];
                 }
-                if($scores['lya'] > $classes['A']){
-                    $class = 'A';
-                }elseif($scores['lya'] > $classes['B']){
-                    $class = 'B';
-                }elseif($scores['lya'] > $classes['C']){
-                    $class = 'C';
-                }elseif($scores['lya'] > $classes['D']){
-                    $class = 'D';
-                }elseif($scores['lya'] > $classes['E']){
-                    $class = 'E';
-                }else{
-                    $class = 'F';
-                }
-                $avg = (($agg + $divisions[$div][$team][$number][$shooter]['lya'])/($wks+1));
-                $divisions[$div][$team][$number][$shooter] += array('agg'=>$agg);
-                $divisions[$div][$team][$number][$shooter] += array('avg'=>$avg);
-                $divisions[$div][$team][$number][$shooter] += array('high'=>$high);
-                $divisions[$div][$team][$number][$shooter] += array('class'=>$class);
-                ksort($divisions[$div][$team][$number][$shooter]);
-                $lyas += $scores['lya'];
             }
         }
         $divisions[$div][$team] += array('lyaas'=>$lyas);
@@ -341,19 +343,21 @@ foreach($divisions as $div=>$teams){
         $n = 0;
 
         foreach($numbers as $number=>$shooters){
-            if($n<6){
-                $w = 1;
-                foreach($shooters as $name => $scores){
-                    for($w=1;$w<16;$w++){
-                        // Add each member's weekly score to the team agg for the week
-                        if(array_key_exists('wk'.$w.'agg',$team_agg)){
-                            $team_agg['wk'.$w.'agg'] += $scores[$w][0];
-                        } else {
-                            $team_agg += array('wk'.$w.'agg'=>$scores[$w][0]);
+            if(is_numeric($number)){
+                if($n<6){
+                    $w = 1;
+                    foreach($shooters as $name => $scores){
+                        for($w=1;$w<16;$w++){
+                            // Add each member's weekly score to the team agg for the week
+                            if(array_key_exists('wk'.$w.'agg',$team_agg)){
+                                $team_agg['wk'.$w.'agg'] += $scores[$w][0];
+                            } else {
+                                $team_agg += array('wk'.$w.'agg'=>$scores[$w][0]);
+                            }
                         }
                     }
+                    $n++;
                 }
-                $n++;
             }
         }
 
@@ -538,77 +542,79 @@ foreach($divisions as $teams){
     foreach($teams as $numbers){ 
         $t=0;
 
-        foreach($numbers as $names){
-            if($t<6){
-                $name=array_keys($names)[0];
-                $class = $names[$name]['class'];
-                
-                // Check if shooter name exists in the $lyas_arr
-                if(array_key_exists($name, $lyas_arr)){
-                    // Update individual winners, runners-up, and close competitors based on high score
-                    if($individual_winners[$class]['high'] < $names[$name]['high']){
-                        // Update values for high score
-                        $individual_close[$class]['high'] = $individual_runner[$class]['high'];
-                        $individual_close_name[$class]['high'] = $individual_runner_name[$class]['high'];
-                        $individual_runner[$class]['high'] = $individual_winners[$class]['high'];
-                        $individual_runner_name[$class]['high'] = $individual_winners_name[$class]['high'];
-                        $individual_winners[$class]['high'] = $names[$name]['high'];
-                        $individual_winners_name[$class]['high'] = $name;
-                    }elseif($individual_runner[$class]['high'] < $names[$name]['high']){
-                        // Update values for the second-highest score
-                        $individual_close[$class]['high'] = $individual_runner[$class]['high'];
-                        $individual_close_name[$class]['high'] = $individual_runner_name[$class]['high'];
-                        $individual_runner[$class]['high'] = $names[$name]['high'];
-                        $individual_runner_name[$class]['high'] = $name;
-                    }elseif($individual_close[$class]['high'] < $names[$name]['high']){
-                        // Update values for the third-highest score
-                        $individual_close[$class]['high'] = $names[$name]['high'];
-                        $individual_close_name[$class]['high'] = $name;
-                    }
-
-                    // Update individual winners, runners-up, and close competitors based on average score
-                    if($individual_winners[$class]['avg'] < $names[$name]['avg']){
-                        // Update values for highest average score
-                        $individual_close[$class]['avg'] = $individual_runner[$class]['avg'];
-                        $individual_close_name[$class]['avg'] = $individual_runner_name[$class]['avg'];
-                        $individual_runner[$class]['avg'] = $individual_winners[$class]['avg'];
-                        $individual_runner_name[$class]['avg'] = $individual_winners_name[$class]['avg'];
-                        $individual_winners[$class]['avg'] = $names[$name]['avg'];
-                        $individual_winners_name[$class]['avg'] = $name;
-                    }elseif($individual_runner[$class]['avg'] < $names[$name]['avg']){
-                        // Update values for second-highest average score
-                        $individual_close[$class]['avg'] = $individual_runner[$class]['avg'];
-                        $individual_close_name[$class]['avg'] = $individual_runner_name[$class]['avg'];
-                        $individual_runner[$class]['avg'] = $names[$name]['avg'];
-                        $individual_runner_name[$class]['avg'] = $name;
-                    }elseif($individual_close[$class]['avg'] < $names[$name]['avg']){
-                        // Update values for third-highest average score
-                        $individual_close[$class]['avg'] = $names[$name]['avg'];
-                        $individual_close_name[$class]['avg'] = $name;
-                    }
+        foreach($numbers as $number => $names){
+            if (is_numeric($number)){
+                if($t<6){
+                    $name=array_keys($names)[0];
+                    $class = $names[$name]['class'];
                     
-                    // Update individual winners, runners-up, and close competitors based on the most improvement
-                    if($individual_winners[$class]['most_improv'] < ($names[$name]['avg']-$names[$name]['lya'])){
-                        // Update values for most improvement
-                        $individual_close[$class]['most_improv'] = $individual_runner[$class]['most_improv'];
-                        $individual_close_name[$class]['most_improv'] = $individual_runner_name[$class]['most_improv'];
-                        $individual_runner[$class]['most_improv'] = $individual_winners[$class]['most_improv'];
-                        $individual_runner_name[$class]['most_improv'] = $individual_winners_name[$class]['most_improv'];
-                        $individual_winners[$class]['most_improv'] = ($names[$name]['avg']-$names[$name]['lya']);
-                        $individual_winners_name[$class]['most_improv'] = $name;
-                    }elseif($individual_runner[$class]['most_improv'] < ($names[$name]['avg']-$names[$name]['lya'])){
-                        // Update values for second-most improvement
-                        $individual_close[$class]['most_improv'] = $individual_runner[$class]['most_improv'];
-                        $individual_close_name[$class]['most_improv'] = $individual_runner_name[$class]['most_improv'];
-                        $individual_runner[$class]['most_improv'] = ($names[$name]['avg']-$names[$name]['lya']);
-                        $individual_runner_name[$class]['most_improv'] = $name;
-                    }elseif($individual_close[$class]['most_improv'] < ($names[$name]['avg']-$names[$name]['lya'])){
-                        // Update values for third-most improvement
-                        $individual_close[$class]['most_improv'] = ($names[$name]['avg']-$names[$name]['lya']);
-                        $individual_close_name[$class]['most_improv'] = $name;
+                    // Check if shooter name exists in the $lyas_arr
+                    if(array_key_exists($name, $lyas_arr)){
+                        // Update individual winners, runners-up, and close competitors based on high score
+                        if($individual_winners[$class]['high'] < $names[$name]['high']){
+                            // Update values for high score
+                            $individual_close[$class]['high'] = $individual_runner[$class]['high'];
+                            $individual_close_name[$class]['high'] = $individual_runner_name[$class]['high'];
+                            $individual_runner[$class]['high'] = $individual_winners[$class]['high'];
+                            $individual_runner_name[$class]['high'] = $individual_winners_name[$class]['high'];
+                            $individual_winners[$class]['high'] = $names[$name]['high'];
+                            $individual_winners_name[$class]['high'] = $name;
+                        }elseif($individual_runner[$class]['high'] < $names[$name]['high']){
+                            // Update values for the second-highest score
+                            $individual_close[$class]['high'] = $individual_runner[$class]['high'];
+                            $individual_close_name[$class]['high'] = $individual_runner_name[$class]['high'];
+                            $individual_runner[$class]['high'] = $names[$name]['high'];
+                            $individual_runner_name[$class]['high'] = $name;
+                        }elseif($individual_close[$class]['high'] < $names[$name]['high']){
+                            // Update values for the third-highest score
+                            $individual_close[$class]['high'] = $names[$name]['high'];
+                            $individual_close_name[$class]['high'] = $name;
+                        }
+
+                        // Update individual winners, runners-up, and close competitors based on average score
+                        if($individual_winners[$class]['avg'] < $names[$name]['avg']){
+                            // Update values for highest average score
+                            $individual_close[$class]['avg'] = $individual_runner[$class]['avg'];
+                            $individual_close_name[$class]['avg'] = $individual_runner_name[$class]['avg'];
+                            $individual_runner[$class]['avg'] = $individual_winners[$class]['avg'];
+                            $individual_runner_name[$class]['avg'] = $individual_winners_name[$class]['avg'];
+                            $individual_winners[$class]['avg'] = $names[$name]['avg'];
+                            $individual_winners_name[$class]['avg'] = $name;
+                        }elseif($individual_runner[$class]['avg'] < $names[$name]['avg']){
+                            // Update values for second-highest average score
+                            $individual_close[$class]['avg'] = $individual_runner[$class]['avg'];
+                            $individual_close_name[$class]['avg'] = $individual_runner_name[$class]['avg'];
+                            $individual_runner[$class]['avg'] = $names[$name]['avg'];
+                            $individual_runner_name[$class]['avg'] = $name;
+                        }elseif($individual_close[$class]['avg'] < $names[$name]['avg']){
+                            // Update values for third-highest average score
+                            $individual_close[$class]['avg'] = $names[$name]['avg'];
+                            $individual_close_name[$class]['avg'] = $name;
+                        }
+                        
+                        // Update individual winners, runners-up, and close competitors based on the most improvement
+                        if($individual_winners[$class]['most_improv'] < ($names[$name]['avg']-$names[$name]['lya'])){
+                            // Update values for most improvement
+                            $individual_close[$class]['most_improv'] = $individual_runner[$class]['most_improv'];
+                            $individual_close_name[$class]['most_improv'] = $individual_runner_name[$class]['most_improv'];
+                            $individual_runner[$class]['most_improv'] = $individual_winners[$class]['most_improv'];
+                            $individual_runner_name[$class]['most_improv'] = $individual_winners_name[$class]['most_improv'];
+                            $individual_winners[$class]['most_improv'] = ($names[$name]['avg']-$names[$name]['lya']);
+                            $individual_winners_name[$class]['most_improv'] = $name;
+                        }elseif($individual_runner[$class]['most_improv'] < ($names[$name]['avg']-$names[$name]['lya'])){
+                            // Update values for second-most improvement
+                            $individual_close[$class]['most_improv'] = $individual_runner[$class]['most_improv'];
+                            $individual_close_name[$class]['most_improv'] = $individual_runner_name[$class]['most_improv'];
+                            $individual_runner[$class]['most_improv'] = ($names[$name]['avg']-$names[$name]['lya']);
+                            $individual_runner_name[$class]['most_improv'] = $name;
+                        }elseif($individual_close[$class]['most_improv'] < ($names[$name]['avg']-$names[$name]['lya'])){
+                            // Update values for third-most improvement
+                            $individual_close[$class]['most_improv'] = ($names[$name]['avg']-$names[$name]['lya']);
+                            $individual_close_name[$class]['most_improv'] = $name;
+                        }
                     }
+                $t++;
                 }
-            $t++;
             }
         }
     }
@@ -676,12 +682,14 @@ foreach($divisions as $div=>$teams){
             
             // Iterate through shooters to collect their names
             foreach($numbers as $number => $shooters){
-                if($s<6){
-                    foreach($shooters as $name => $scores){
-                        array_push($team_winners_names[$div],$name);
-                        break;
+                if(is_numeric($number)){
+                    if($s<6){
+                        foreach($shooters as $name => $scores){
+                            array_push($team_winners_names[$div],$name);
+                            break;
+                        }
+                        $s++;
                     }
-                    $s++;
                 }
             }
         }
