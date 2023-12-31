@@ -113,28 +113,34 @@ require "includes/scores-edit.inc.php";
         </table>
     </div>
 </main>
+<!-- Popup Window for Tie Breaker Selection -->
 <container id="popup-window">
     <h1>Select the Tie Breaker winner</h1>
     <br>
     <br>
+    <!-- Dropdown for Choosing the Winning Team -->
     <label for="teams">Choose the winning team</label>
     <select id="teams" name="teams">
     <?php
+        // Loop through teams array to populate options
         foreach($teams_arr as $team){
             echo '<option value="'.$team.'">'.$team.'</option>';
         }
     ?>
     </select>
     <br>
+    <!-- Dropdown for Choosing the Week -->
     <label for="weeks">Choose the week</label>
     <select id="weeks" name="weeks">
     <?php
+        // Loop through weeks (1 to 15) to populate options
         for($wk=1;$wk<16;$wk++){
             echo '<option value="'.$wk.'">'.$wk.'</option>';
         }
     ?>
     </select>
     <br>
+    <!-- Submit and Cancel Buttons -->
     <button id="submit" onclick="submitTieBreaker()">Submit</button>
     <button id="cancel" onclick="closePopup()">Cancel</button>
 </container>
@@ -146,22 +152,27 @@ require "includes/scores-edit.inc.php";
     include_once "includes/scores-tie-breaker.inc.php";
 ?>
 
+<!-- JavaScript Section -->
 <script type="text/javascript">
-    // JavaScript functions for Submit, Reset, Show Qual, and Show Season
+    /**
+     * Function to submit changes to the server
+     */
     function submit(){
         let inputs = document.getElementsByTagName("input");
         var i;
         var changedInputs = new Object();
         for(i=0;i<inputs.length;i++){
+            // Check if input value has changed and is valid
             if(inputs[i].defaultValue != inputs[i].value && inputs[i].checkValidity()){
                 changedInputs[inputs[i].name] = inputs[i].value;
             } else {
+                // If not valid, reset to default value
                 if(!inputs[i].checkValidity()){
                     inputs[i].value = inputs[i].defaultValue;
                 }
             }
         }
-        console.log(changedInputs);
+        // If there are changed inputs, send them to the server
         if(Object.getOwnPropertyNames(changedInputs).length > 0){
             // Send changed inputs to the server using fetch API
             fetch("includes/scores-handler.inc.php", {
@@ -172,12 +183,15 @@ require "includes/scores-edit.inc.php";
                 return response.text();
             }).then(function(data){
                 console.log("Request complete! Response:", data);
-
+                // Reload the page after successful submission
                 location.reload();
             });
         }
     }
 
+    /**
+     * Function to reset all input values to default values
+     */
     function reset(){
         // Reset all input values to their default values
         let inputs = document.getElementsByTagName("input");
@@ -187,8 +201,10 @@ require "includes/scores-edit.inc.php";
         }
     }
 
+    /**
+     * Function to toggle visibility of Qualifying scores
+     */
     function qualifying(){
-        // Toggle visibility of Qualifying scores
         let qual = document.getElementById("qual_view");
         let quals = document.getElementsByClassName("qualifying");
         var i;
@@ -205,8 +221,10 @@ require "includes/scores-edit.inc.php";
         }
     }
 
+    /**
+     * Function to toggle visibility of Season scores
+     */
     function season(){
-        // Toggle visibility of Season scores
         let season = document.getElementById("season_view");
         let seasons = document.getElementsByClassName("season");
         var i;
@@ -225,17 +243,29 @@ require "includes/scores-edit.inc.php";
 
     // Get the elements by their ID
     const popupWindow = document.getElementById("popup-window");
-    // Show the pop-up window when the link is clicked
+
+     /**
+     * Function to show the pop-up window when the link is clicked
+     */
     function declare_tie_breaker(){
         popupWindow.style.display = "block";
     }
-    // Hide the pop-up window when the close button is clicked
+
+    /**
+     * Function to hide the pop-up window when the close button is clicked
+     */
     function closePopup(){
         popupWindow.style.display = "none";
     }
+    
+    /**
+     * Function to submit tie breaker selection
+     */
     function submitTieBreaker(){
         let team = document.getElementById("teams").value;
         let week = document.getElementById("weeks").value;
+
+        // Send tie breaker selection to the server using fetch API
         fetch("includes/scores-tie-breaker.inc.php", {
                 "method": "POST",
                 "headers": {"Content-type":"application/json"},
@@ -244,6 +274,7 @@ require "includes/scores-edit.inc.php";
                 return response.text();
             }).then(function(data){
                 console.log("Request complete! Response:", data);
+                // Close the pop-up window after successful submission
                 closePopup();
             });
     }
