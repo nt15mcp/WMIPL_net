@@ -1,8 +1,22 @@
 <?php
-	// Need to start a new session if necessary and track what page we are on for this session 
+/**
+ * Leaders Page
+ *
+ * PHP script for the leaders page of the website. Starts a session, sets the current
+ * page in the session data, includes a common header file, retrieves scores information
+ * from the database, and displays leaderboards for individual winners and team winners.
+ */
+
+	// Start a new session or resume the existing session
 	session_start();
+
+	// Set the current page to "leaders" in the session data
 	$_SESSION['page']="leaders";
-	require "header.php"; // Use common header file so no need to repeat for each page
+
+	// Include the common header file to maintain consistency across pages
+	require "header.php";
+
+	// Include the scores information retrieval script
 	require "includes/scores.inc.php";
 ?>
 
@@ -121,13 +135,15 @@
 			</table>
 		</div>
 	</main>
+
+	<!-- JavaScript to switch between individual and team tabs -->
 	<script type="text/javascript">
 		function displayTab(tabId){
 			let indBut = document.getElementById("individual_button");
 			let teamBut = document.getElementById("team_button");
 			let indTab = document.getElementById("individuals");
 			let teamTab = document.getElementById("team");
-			console.log(indBut.classList);
+			
 			if(tabId == "individuals"){
 				if(teamBut.classList.contains("active-tab")){
 					indBut.classList.replace("inactive-tab","active-tab");
@@ -145,6 +161,8 @@
 			}
 		}
 	</script>
+
 <?php
-	require "footer.php"; // Use common footer file so no need to repeat for each page
+	// Include the common footer file to maintain consistency across pages
+	require "footer.php";
 ?>

@@ -1,68 +1,80 @@
 <?php
+/**
+ * New Password Submission
+ *
+ * This script handles the submission of a new password for a user who has initiated a password reset.
+ * It validates the input, checks the token, updates the user's password in the database,
+ * and deletes the password reset entry after a successful password change.
+ *
+ */
 
 if (isset($_POST["new-password-submit"])) {
-	$selector = $_POST["selector"];
+	// Retrieve data from the form submission
+    $selector = $_POST["selector"];
 	$validator = $_POST["validator"];
 	$password = $_POST["password"];
 	$pass1 = $_POST["pass1"];
 	
-	if (empty($password) || empty($pass1)) {
+	// Validate password fields
+    if (empty($password) || empty($pass1)) {
 		header("Location: ../signup.php?error=invalidpassword");
 		exit();
-	}
-	else if ($password !== $pass1) {
+	} else if ($password !== $pass1) {
 		header("Location: ../signup.php?error=invalidpassword");
 		exit();
 	}
 	
-	$currentDate = date("U");
+	// Get the current date
+    $currentDate = date("U");
 	
-	require 'dbh.inc.php';
-	$sql = "SELECT * FROM pwdreset WHERE pwdResetSelector=? AND pwdResetExpires>=?";
+	// Include the database helper
+    require 'dbh.inc.php';
+	
+	// Check if the token is valid and not expired
+    $sql = "SELECT * FROM pwdreset WHERE pwdResetSelector=? AND pwdResetExpires>=?";
 	$stmt = mysqli_stmt_init($conn);
+	
 	if (!mysqli_stmt_prepare($stmt, $sql)) {
 		header("Location: ../signup.php?error=sqlierror");
 		exit();	
-	}
-	else {
+	} else {
 		mysqli_stmt_bind_param($stmt, "ss", $selector, $currentDate);
 		mysqli_stmt_execute($stmt);
 		
 		$result = mysqli_stmt_get_result($stmt);
-		if (!$row = mysqli_fetch_assoc($result)) {
+		
+		// Check if the row exists
+        if (!$row = mysqli_fetch_assoc($result)) {
 			header("Location: ../signup.php?error=sqlierror");
 			exit();
-		}
-		else {
-			$tokenBin = hex2bin($validator);
-			$tokenCheck = password_verify($tokenBin, $row["pwdResetToken"]);
-			
-			if ($tokenCheck === false) {
+		} else {
+			// Verify the password reset token
+            $tokenBin = hex2bin($validator);
+			if(!password_verify($tokenBin, $row["pwdResetToken"])){
 				header("Location: ../signup.php?error=sqlierror");
 				exit();
-			}
-			else if ($tokenCheck === true) {
+			} else {
 				$email = $row["pwdResetEmail"];
 				$hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 				
+				// Update the password for the user
 				$sql = "UPDATE logins SET password=? WHERE email=?";
 				$stmt = mysqli_stmt_init($conn);
 				if (!mysqli_stmt_prepare($stmt, $sql)) {
 					header("Location: ../signup.php?error=sqlierror");
 					exit();
-				}
-				else {
+				} else {
 					mysqli_stmt_bind_param($stmt, "ss", $hashedPassword, $email);
 					mysqli_stmt_execute($stmt);
 				}
 				
-				$sql = "DELETE FROM pwdreset WHERE pwdResetEmail=?";
+				// Delete the password reset entry
+                $sql = "DELETE FROM pwdreset WHERE pwdResetEmail=?";
 				$stmt = mysqli_stmt_init($conn);
 				if (!mysqli_stmt_prepare($stmt, $sql)) {
 					header("Location: ../signup.php?error=sqlierror");
 					exit();
-				}
-				else {
+				} else {
 					mysqli_stmt_bind_param($stmt, "s", $email);
 					mysqli_stmt_execute($stmt);
 					header("Location: ../signup.php?reset=success");
@@ -71,10 +83,13 @@ if (isset($_POST["new-password-submit"])) {
 			}
 		}
 	}
-	mysqli_stmt_close($stmt);
+
+	// Close database connections
+    mysqli_stmt_close($stmt);
 	mysqli_close($conn);
-}
-else {
-	header("Location: ../index.php");
+} else {
+	// Redirect to the home page if the form is not submitted
+    header("Location: ../index.php");
 	exit();
 }
+?>

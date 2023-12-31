@@ -1,11 +1,17 @@
+# .htaccess Configuration File
+# This file manages URL rewriting and redirection for enhanced security and functionality.
+
+# Enable the rewriting engine
 RewriteEngine On
+
+# Redirect all HTTP traffic to HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Rewrite .html to .php extension
+# For example, "example.html" will be internally processed as "example.php"
 RewriteRule ^(.*)\.html$ $1.php [L]
+
+# Remove version number from CSS and JS files
+# For example, "styles.1630456210.css" will be treated as "styles.css"
 RewriteRule ^(.*)\.[\d]{10}\.(css|js)$ $1.$2 [L]
-
-
-
-
-
-
-
-

@@ -1,8 +1,16 @@
 <?php
-// Need to start a new session if necessary and track what page we are on for this session 
+/**
+ * Password Reset Page
+ * 
+ * PHP script for the password reset page. Handles session initiation,
+ * includes common header and footer files, and displays a form for users
+ * to reset their passwords based on the link provided in the email.
+ */
+	// Need to start a new session if necessary and track what page we are on for this session 
 	if(!isset($_GET["selector"])){
 		header("Location home.php");
 	}
+	
 	require "header.php"; // Use common header file so no need to repeat for each page
 ?>
 

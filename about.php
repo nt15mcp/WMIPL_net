@@ -1,8 +1,20 @@
 <?php
+/**
+ * About Page
+ * 
+ * PHP script for the 'about' page. Handles session initiation,
+ * includes common header and footer files, and displays content
+ * from the database. If the user is an executive member, provides
+ * an option to edit and submit the content using CKEditor.
+ */
 	// Need to start a new session if necessary and track what page we are on for this session 
 	session_start();
+
+	// Set the current page to "about" in the session data
 	$_SESSION['page']="about";
-	require "header.php"; // Use common header file so no need to repeat for each page
+	
+	// Include the common header file to maintain consistency across pages
+	require "header.php";
 ?>
 
 	<main>

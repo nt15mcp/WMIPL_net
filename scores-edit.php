@@ -1,35 +1,53 @@
 <?php
-// Need to start a new session if necessary and track what page we are on for this session 
+/**
+ * Scores Edit Page
+ *
+ * PHP script for the scores edit page. Initiates a new session, sets the 'page'
+ * session variable to 'scores-edit', and includes a common header file. Checks
+ * if the logged-in user is an executive (specifically, a Statistician). If not,
+ * redirects the user to the scores view page. Retrieves and displays editable
+ * scores data for Qualifying and Season rounds in a table format. Allows
+ * executives to submit score changes for individual shooters.
+ *
+ */
+
+// Start a new session and track the current page
 session_start();
 $_SESSION['page']="scores-edit";
-require "header.php"; // Use common header file so no need to repeat for each page
+
+// Include a common header file to avoid repetition
+require "header.php";
+
+// Check if the logged-in user is an executive (Statistician)
 if(isset($_SESSION['executive'])){
     if($_SESSION['executive']!='Statistician'){
-        header("Location: scores.php".$urlString); // if statistician is not logged in, go to scores view page.
+        header("Location: scores.php".$urlString); // Redirect to scores view page
     }
 }else{
-    header("Location: scores.php".$urlString); // if statistician is not logged in, go to scores view page.
+    header("Location: scores.php".$urlString); // Redirect to scores view page
 }
 
-// bring in all the data!
+// Include scores edit data
 require "includes/scores-edit.inc.php";
 ?>
 
-
 <main>
 <div class="button-container w3-center">
+        <!-- Buttons for Submit, Reset, Show Qual, and Show Season -->
         <button class="w3-button w3-bar-item" onclick="submit()" >Submit</button>
         <button class="w3-button w3-bar-item" onclick="reset()" >Reset</button>
         <button class="w3-button w3-bar-item active" id="qual_view" onclick="qualifying()" >Show Qual</button>
         <button class="w3-button w3-bar-item active" id="season_view" onclick="season()">Show Season</button>
 </div>
     <div class="scores-edit">
+        <!-- Table for displaying editable scores data -->
         <table class="w3-table">
             <thead>
                 <tr>
                     <th class="headcol"><h2>NUMBER</h2></th>
                     <th class="headcol"><h2>NAME</h2></th>
                     <?php
+                        // Display Qualifying and Season headers
                         for($q=0;$q<3;$q++){
                             echo '<th class="qualifying headrow"><h2>Q'.($q+1).'</h2></th>';
                         }
@@ -92,8 +110,14 @@ require "includes/scores-edit.inc.php";
         </table>
     </div>
 </main>
-<?php include_once "includes/scores-handler.inc.php" ?>
+
+<?php 
+    // Include scores handler for processing score changes
+    include_once "includes/scores-handler.inc.php" 
+?>
+
 <script type="text/javascript">
+    // JavaScript functions for Submit, Reset, Show Qual, and Show Season
     function submit(){
         let inputs = document.getElementsByTagName("input");
         var i;
@@ -109,6 +133,7 @@ require "includes/scores-edit.inc.php";
         }
         console.log(changedInputs);
         if(Object.getOwnPropertyNames(changedInputs).length > 0){
+            // Send changed inputs to the server using fetch API
             fetch("includes/scores-handler.inc.php", {
                 "method": "POST",
                 "headers": {"Content-type":"application/json"},
@@ -117,10 +142,14 @@ require "includes/scores-edit.inc.php";
                 return response.text();
             }).then(function(data){
                 console.log("Request complete! Response:", data);
+
+                location.reload();
             });
         }
     }
+
     function reset(){
+        // Reset all input values to their default values
         let inputs = document.getElementsByTagName("input");
         var i;
         for(i=0;i<inputs.length;i++){
@@ -129,6 +158,7 @@ require "includes/scores-edit.inc.php";
     }
 
     function qualifying(){
+        // Toggle visibility of Qualifying scores
         let qual = document.getElementById("qual_view");
         let quals = document.getElementsByClassName("qualifying");
         var i;
@@ -144,7 +174,9 @@ require "includes/scores-edit.inc.php";
             }
         }
     }
+
     function season(){
+        // Toggle visibility of Season scores
         let season = document.getElementById("season_view");
         let seasons = document.getElementsByClassName("season");
         var i;

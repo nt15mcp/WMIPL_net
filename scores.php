@@ -1,8 +1,24 @@
 <?php
-	// Need to start a new session if necessary and track what page we are on for this session 
+/**
+ * Scores Page
+ *
+ * This script is responsible for displaying shooter information, scores, and statistics on the scores page.
+ * It utilizes a dynamic layout to show scores for different divisions, allowing the user to selectively view
+ * or hide divisions based on checkboxes.
+ *
+ * @session_start Initializes or resumes a session.
+ * @$_SESSION['page'] Tracks the current page in the session.
+ * @require "header.php" Includes a common header file for consistent page structure.
+ * @header("Location: scores-edit.php".$urlString) Redirects to the editing page if the logged-in user is a Statistician.
+ */
 	session_start();
+	
+	// Set the current page to "scores" in the session data
 	$_SESSION['page']="scores";
-	require "header.php"; // Use common header file so no need to repeat for each page
+	
+	// Include the common header file to maintain consistency across pages
+	require "header.php";
+
 	if(isset($_SESSION['executive'])){
 		if($_SESSION['executive']=='Statistician'){
 			header("Location: scores-edit.php".$urlString); // if Statistician is logged in, go to editing page.
@@ -106,16 +122,16 @@
 					echo 'const div'.$div.' = document.getElementById("Div'.$div.'");';
 				}
 			?>
-			// Create an array of the iframes
+			// Create an array of the division frames
 			const divFrames = [<?php echo $divFrames ?>];
-			// Create a variable of the visible iframes
+			// Create a variable of the visible frames
 			var chkboxCount = 0;
 			// Listen for the checkbox state to change
 			divCheckboxes.forEach((divCheckbox, index) => {
 				// Add an event listener
 				divCheckbox.addEventListener('change', (event) => {
 					if (event.target.checked) {
-						// Display the iFrame
+						// Display the frame
 						divFrames[index].style.display = 'block';
 						// Add a count to the visible frames
 						chkboxCount = chkboxCount + 1;
@@ -124,7 +140,7 @@
 							selectAllChkbox.checked = true;
 						}
 					} else {
-						// Hide the iframe
+						// Hide the frame
 						divFrames[index].style.display = 'none';
 						// Decrement the count of visible frames
 						chkboxCount = chkboxCount - 1;
@@ -154,5 +170,6 @@
 		</script>
 	</main>
 <?php
-	require "footer.php"; // Use common footer file so no need to repeat for each page
+	// Include the common footer file to maintain consistency across pages
+	require "footer.php";
 ?>
