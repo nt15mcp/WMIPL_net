@@ -56,6 +56,7 @@ require "includes/scores-edit.inc.php";
                             echo '<th class="season headrow"><h2>Wk'.($wk+1).'</h2></th>';
                         }
                     ?>
+                    <th class="headcol"><h2>DUMMY FUNCTION</h2></th>
                 </tr>
             </thead>
             <tbody>
@@ -92,6 +93,11 @@ require "includes/scores-edit.inc.php";
                                                 echo '<td class="season"><input name="'.$shooter.'_'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="" value=""></td>';
                                             }
                                         }
+                                        if(str_contains($shooter, 'DUMMY')){
+                                            echo '<td><button class="w3-button" onclick="un_dummy_shooter(\''.$shooter.'\')" >UN-DUMMY</button></td>';
+                                        } else {
+                                            echo '<td><button class="w3-button" onclick="declare_dummy(\''.$shooter.'\')" >DUMMY</button></td>';
+                                        }
                                     }else{
                                         if(is_string($shooters)){
                                             echo '<th><h3>'.$shooters.'</h3></th>';
@@ -102,7 +108,13 @@ require "includes/scores-edit.inc.php";
                                         for($wk=1;$wk<16;$wk++){
                                             echo '<td class="season"><input name="'.$shooters.'_'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="" value=""></td>';
                                         }
+                                        if(str_contains($shooters, 'DUMMY')){
+                                            echo '<td><button class="w3-button" onclick="un_dummy_shooter(\''.$shooters.'\')" >UN-DUMMY</button></td>';
+                                        } else {
+                                            echo '<td><button class="w3-button" onclick="declare_dummy(\''.$shooters.'\')" >DUMMY</button></td>';
+                                        }
                                     }
+                                    echo '</tr>';
                                     $s++;
                                 }
                             }
@@ -114,7 +126,7 @@ require "includes/scores-edit.inc.php";
     </div>
 </main>
 <!-- Popup Window for Tie Breaker Selection -->
-<container id="popup-window">
+<container class="popup-window" id="tie-breaker-window">
     <h1>Select the Tie Breaker winner</h1>
     <br>
     <br>
@@ -142,14 +154,38 @@ require "includes/scores-edit.inc.php";
     <br>
     <!-- Submit and Cancel Buttons -->
     <button id="submit" onclick="submitTieBreaker()">Submit</button>
-    <button id="cancel" onclick="closePopup()">Cancel</button>
+    <button id="cancel" onclick="close_tie_breaker()">Cancel</button>
+</container>
+
+<!-- Popup Window for Dummy Selection -->
+<container class="popup-window" id="dummy-window">
+    <h1 id="dummyHeader" name=""></h1>
+    <br>
+    <br>
+    <input id="dummyInput" type="hidden" value=></input>
+    <!-- Dropdown for Choosing the Week -->
+    <label for="weeks">Choose the week</label>
+    <select id="dummyWeeks" name="dummyWeeks">
+    <?php
+        // Loop through weeks (1 to 15) to populate options
+        for($wk=1;$wk<16;$wk++){
+            echo '<option value="'.$wk.'">'.$wk.'</option>';
+        }
+    ?>
+    </select>
+    <br>
+    <!-- Submit and Cancel Buttons -->
+    <button id="submit" onclick="submit_dummy('')">Submit</button>
+    <button id="cancel" onclick="close_dummy()">Cancel</button>
 </container>
 
 <?php 
     // Include scores handler for processing score changes
     include_once "includes/scores-handler.inc.php"; 
-    // Include tie breaker handler
+    // Include tie breaker handler for processing manual tie breakers
     include_once "includes/scores-tie-breaker.inc.php";
+    // Include dummy handler for processing dummy shooters
+    include_once "includes/scores-dummy.inc.php";
 ?>
 
 <!-- JavaScript Section -->
@@ -242,20 +278,32 @@ require "includes/scores-edit.inc.php";
     }
 
     // Get the elements by their ID
-    const popupWindow = document.getElementById("popup-window");
+    const tie_breaker_Window = document.getElementById("tie-breaker-window");
+    const dummy_window = document.getElementById("dummy-window");
 
      /**
      * Function to show the pop-up window when the link is clicked
      */
     function declare_tie_breaker(){
-        popupWindow.style.display = "block";
+        tie_breaker_Window.style.display = "block";
+    }
+    function declare_dummy(name){
+        var dummyHeader = document.getElementById("dummyHeader");
+        var dummyInput = document.getElementById("dummyInput");
+        var dummyString = "Select the Week to Dummy out: " + name;
+        dummyHeader.textContent = dummyString;
+        dummyInput.value = "'"+name+"'";
+        dummy_window.style.display = "block";
     }
 
     /**
      * Function to hide the pop-up window when the close button is clicked
      */
-    function closePopup(){
-        popupWindow.style.display = "none";
+    function close_tie_breaker(){
+        tie_breaker_Window.style.display = "none";
+    }
+    function close_dummy(){
+        dummy_window.style.display = "none";
     }
     
     /**
@@ -275,7 +323,42 @@ require "includes/scores-edit.inc.php";
             }).then(function(data){
                 console.log("Request complete! Response:", data);
                 // Close the pop-up window after successful submission
-                closePopup();
+                close_tie_breaker();
             });
+        }
+
+    /**
+     * Function to submit dummy shooter
+     */
+    function submit_dummy(name){
+        if(name == ''){
+            let newName = document.getElementById("dummyInput").value;
+            let week = document.getElementById("dummyWeeks").value;
+
+            // Send tie breaker selection to the server using fetch API
+            fetch("includes/scores-dummy.inc.php", {
+                    "method": "POST",
+                    "headers": {"Content-type":"application/json"},
+                    "body": JSON.stringify({"name": newName,"week": week})
+                }).then(function(response){
+                    return response.text();
+                }).then(function(data){
+                    console.log("Request complete! Response:", data);
+                    // Reload the page to show new data
+                    //location.reload();
+                });
+        } else {
+            fetch("includes/scores-dummy.inc.php",{
+                "method":"POST",
+                "headers": {"Content-type":"application/json"},
+                "body": JSON.stringify({"name": name, "week": ""})
+            }).then(function(response){
+                return response.text();
+            }).then(function(data){
+                console.log("Request complete! Response:", data);
+                // Reload the page to show new data
+                //location.reload();
+            })
+        }
     }
 </script>

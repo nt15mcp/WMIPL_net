@@ -15,11 +15,9 @@
  */
 
     // Check if a POST request has been made
-    if(isset($_POST)){
-        
+    if(isset($_SERVER["CONTENT_TYPE"])){
         // Retrieve raw JSON data from the request
         $json = file_get_contents('php://input');
-        
         // Decode JSON data into associative array
         $data = json_decode($json, true);
 
@@ -31,7 +29,6 @@
             // Extract data from the decoded JSON
             $team = $data["team"];
             $week = $data["week"];
-            
             // Initialize id variables
             $team_id = 0;
             $week_id = 0;

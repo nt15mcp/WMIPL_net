@@ -9,7 +9,7 @@
  * Note: The script expects a JSON payload in the format: {"shooter_week": "score", ...}
  *
  */
-    if(isset($_POST)){
+    if(isset($_SERVER["CONTENT_TYPE"])){
         // Get JSON data from the request
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
