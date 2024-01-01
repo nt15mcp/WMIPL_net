@@ -39,6 +39,7 @@ require "includes/scores-edit.inc.php";
         <button class="w3-button w3-bar-item active" id="qual_view" onclick="qualifying()" >Show Qual</button>
         <button class="w3-button w3-bar-item active" id="season_view" onclick="season()">Show Season</button>
         <button class="w3-button w3-bar-item" onclick="declare_tie_breaker()" >Tie-Breaker Entry</button>
+        <button class="w3-button w3-bar-item" onclick="make_shooter_swap()" >Shooter Swap</button>
 </div>
     <div class="scores-edit">
         <!-- Table for displaying editable scores data -->
@@ -62,6 +63,7 @@ require "includes/scores-edit.inc.php";
             <tbody>
                 <?php
                     $teams_arr = array();
+                    $shooters_arr = array();
                     foreach($divisions as $teams){
                         foreach($teams as $team => $numbers){
                             $s=0;
@@ -76,6 +78,7 @@ require "includes/scores-edit.inc.php";
                                     if(!is_string($shooters)){
                                         foreach($shooters as $name=>$scores){
                                             $shooter = $name;
+                                            array_push($shooters_arr,$name);
                                             echo '<th><h3>'.$name.'</h3></th>';
                                             break;
                                         }
@@ -99,9 +102,8 @@ require "includes/scores-edit.inc.php";
                                             echo '<td><button class="w3-button" onclick="declare_dummy(\''.$shooter.'\')" >DUMMY</button></td>';
                                         }
                                     }else{
-                                        if(is_string($shooters)){
-                                            echo '<th><h3>'.$shooters.'</h3></th>';
-                                        }
+                                        $shooters_arr += $shooters;
+                                        echo '<th><h3>'.$shooters.'</h3></th>';
                                         for($wk=1;$wk<4;$wk++){
                                             echo '<td class="qualifying"><input name="'.$shooters.'_Q'.$wk.'" type="number" min="0" max="300" maxlength="3" step="1" width="3" defaultValue="" value=""></td>';
                                         }
@@ -133,23 +135,23 @@ require "includes/scores-edit.inc.php";
     <!-- Dropdown for Choosing the Winning Team -->
     <label for="teams">Choose the winning team</label>
     <select id="teams" name="teams">
-    <?php
-        // Loop through teams array to populate options
-        foreach($teams_arr as $team){
-            echo '<option value="'.$team.'">'.$team.'</option>';
-        }
-    ?>
+        <?php
+            // Loop through teams array to populate options
+            foreach($teams_arr as $team){
+                echo '<option value="'.$team.'">'.$team.'</option>';
+            }
+        ?>
     </select>
     <br>
     <!-- Dropdown for Choosing the Week -->
     <label for="weeks">Choose the week</label>
     <select id="weeks" name="weeks">
-    <?php
-        // Loop through weeks (1 to 15) to populate options
-        for($wk=1;$wk<16;$wk++){
-            echo '<option value="'.$wk.'">'.$wk.'</option>';
-        }
-    ?>
+        <?php
+            // Loop through weeks (1 to 15) to populate options
+            for($wk=1;$wk<16;$wk++){
+                echo '<option value="'.$wk.'">'.$wk.'</option>';
+            }
+        ?>
     </select>
     <br>
     <!-- Submit and Cancel Buttons -->
@@ -164,8 +166,49 @@ require "includes/scores-edit.inc.php";
     <br>
     <input id="dummyInput" type="hidden" value=></input>
     <!-- Dropdown for Choosing the Week -->
-    <label for="weeks">Choose the week</label>
+    <label for="dummyWeeks">Choose the week</label>
     <select id="dummyWeeks" name="dummyWeeks">
+        <?php
+            // Loop through weeks (1 to 15) to populate options
+            for($wk=1;$wk<16;$wk++){
+                echo '<option value="'.$wk.'">'.$wk.'</option>';
+            }
+        ?>
+    </select>
+    <br>
+    <!-- Submit and Cancel Buttons -->
+    <button id="submit" onclick="submit_dummy('')">Submit</button>
+    <button id="cancel" onclick="close_dummy()">Cancel</button>
+</container>
+
+<!-- Popup Window for Shooter Swap Selection -->
+<container class="popup-window" id="swap-window">
+    <h1>Select shooters and week for swap</h1>
+    <br>
+    <br>
+    <label for="shooter1">Choose the first shooter</label>
+    <select id="shooter1" name="shooter1">
+        <?php
+            // Loop through shooters to provide dropdown options
+            foreach($shooters_arr as $name){
+                echo '<option value="'.$name.'">'.$name.'</option>';
+            }
+        ?>
+    </select>
+    <br>
+    <label for="shooter2">Choose the second shooter</label>
+    <select id="shooter2" name="shooter2">
+        <?php
+            // Loop through shooters to provide dropdown options
+            foreach($shooters_arr as $name){
+                echo '<option value="'.$name.'">'.$name.'</option>';
+            }
+        ?>
+    </select>
+    <br>
+    <!-- Dropdown for Choosing the Week -->
+    <label for="swapWeeks">Choose the week</label>
+    <select id="swapWeeks" name="swapWeeks">
     <?php
         // Loop through weeks (1 to 15) to populate options
         for($wk=1;$wk<16;$wk++){
@@ -175,8 +218,8 @@ require "includes/scores-edit.inc.php";
     </select>
     <br>
     <!-- Submit and Cancel Buttons -->
-    <button id="submit" onclick="submit_dummy('')">Submit</button>
-    <button id="cancel" onclick="close_dummy()">Cancel</button>
+    <button id="submit" onclick="submit_swap()">Submit</button>
+    <button id="cancel" onclick="close_swap()">Cancel</button>
 </container>
 
 <?php 
@@ -280,6 +323,7 @@ require "includes/scores-edit.inc.php";
     // Get the elements by their ID
     const tie_breaker_Window = document.getElementById("tie-breaker-window");
     const dummy_window = document.getElementById("dummy-window");
+    const swap_window = document.getElementById("swap-window");
 
      /**
      * Function to show the pop-up window when the link is clicked
@@ -295,6 +339,9 @@ require "includes/scores-edit.inc.php";
         dummyInput.value = "'"+name+"'";
         dummy_window.style.display = "block";
     }
+    function make_shooter_swap(){
+        swap_window.style.display = "block";
+    }
 
     /**
      * Function to hide the pop-up window when the close button is clicked
@@ -304,6 +351,9 @@ require "includes/scores-edit.inc.php";
     }
     function close_dummy(){
         dummy_window.style.display = "none";
+    }
+    function close_swap(){
+        swap_window.style.display = "none";
     }
     
     /**

@@ -415,7 +415,7 @@ th.sort-by:after {border-top-color: #666;margin-top: 1px;}
 .popup-window{
     text-align: center;
     position: fixed;
-    width: 600px;
+    width: 650px;
     height: 250px;
     background: hsla(213,35%,88%,1);
     border: 1px solid black;
