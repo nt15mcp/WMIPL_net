@@ -27,7 +27,10 @@
 ?>
 
 	<main>
-		<?php require 'includes/scores.inc.php' ?>
+		<?php 
+			require 'includes/scores.inc.php';
+			require 'includes/scores-shooter.inc.php';
+		?>
 		<div>
 			<!-- Setup a selection box bar across the top of the page to select divisions for viewing -->
 			<div class="w3-bar w3-center w3-border scores-bar">
