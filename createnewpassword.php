@@ -9,6 +9,7 @@
 	// Need to start a new session if necessary and track what page we are on for this session 
 	if(!isset($_GET["selector"])){
 		header("Location home.php");
+		exit();
 	}
 	
 	require "header.php"; // Use common header file so no need to repeat for each page

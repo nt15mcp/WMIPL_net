@@ -22,9 +22,11 @@ require "header.php";
 if(isset($_SESSION['executive'])){
     if($_SESSION['executive']!='Statistician'){
         header("Location: scores.php".$urlString); // Redirect to scores view page
+        exit();
     }
 }else{
     header("Location: scores.php".$urlString); // Redirect to scores view page
+    exit();
 }
 
 // Include scores edit data

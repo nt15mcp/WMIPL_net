@@ -12,6 +12,7 @@
 	// Redirect to index.php if the user is not logged in
 	if(!isset($_SESSION['firstname'])){
 		header('Location index.php');
+		exit();
 	}
 	unset($_SESSION['page']);
 

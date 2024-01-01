@@ -24,6 +24,7 @@ foreach ($_GET as $key => $value) {
 
 // Redirect the user to the 'index.php' page with the constructed query string
 header("Location: index.php".$urlString); 
+exit();
 
 // Note: This code essentially captures all the parameters from the current URL and
 // constructs a new URL with the same parameters, redirecting the user to the 'index.php' page.

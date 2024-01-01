@@ -22,6 +22,7 @@
 	if(isset($_SESSION['executive'])){
 		if($_SESSION['executive']=='Statistician'){
 			header("Location: scores-edit.php".$urlString); // if Statistician is logged in, go to editing page.
+			exit();
 		}
 	}
 ?>
