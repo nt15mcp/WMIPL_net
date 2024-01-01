@@ -15,3 +15,6 @@ RewriteRule ^(.*)\.html$ $1.php [L]
 # Remove version number from CSS and JS files
 # For example, "styles.1630456210.css" will be treated as "styles.css"
 RewriteRule ^(.*)\.[\d]{10}\.(css|js)$ $1.$2 [L]
+
+# Deny access to special files from the webserver
+<filesMatch ".(htaccess|htpasswd|ini|phps|fla|psd|log|sh)$">  Order Allow,Deny  Deny from all </filesMatch>
