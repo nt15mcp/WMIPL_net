@@ -7,20 +7,34 @@
  * and deletes the password reset entry after a successful password change.
  *
  */
+// Start a new session or resume the existing one
+session_start();
+// Check to see if the submission came from the right place
+if(!isset($_SESSION['page']) && $_SESSION['page'] != 'resetPwd'){
+	// Shouldn't be here, send them home
+	header("Location:../index.php");
+	exit();
+}
 
 if (isset($_POST["new-password-submit"])) {
 	// Retrieve data from the form submission
-    $selector = $_POST["selector"];
-	$validator = $_POST["validator"];
-	$password = $_POST["password"];
-	$pass1 = $_POST["pass1"];
+    $selector = filter_input(INPUT_POST,'selector',FILTER_SANITIZE_SPECIAL_CHARS);
+	$validator = filter_input(INPUT_POST,'validator',FILTER_SANITIZE_SPECIAL_CHARS);
+	$password = filter_input(INPUT_POST,'password',FILTER_SANITIZE_SPECIAL_CHARS);
+	$pass1 = filter_input(INPUT_POST,'pass1',FILTER_SANITIZE_SPECIAL_CHARS);
 	
 	// Validate password fields
     if (empty($password) || empty($pass1)) {
-		header("Location: ../signup.php?error=invalidpassword");
+		$_SESSION['error'] = 'invalid_password';
+		$_SESSION['selector'] = $selector;
+		$_SESSION['validator'] = $validator;
+		header("Location: ../pwdreset.php");
 		exit();
 	} else if ($password !== $pass1) {
-		header("Location: ../signup.php?error=invalidpassword");
+		$_SESSION['error'] = 'invalid_password';
+		$_SESSION['selector'] = $selector;
+		$_SESSION['validator'] = $validator;
+		header("Location: ../pwdreset.php");
 		exit();
 	}
 	
@@ -31,62 +45,52 @@ if (isset($_POST["new-password-submit"])) {
     require 'dbh.inc.php';
 	
 	// Check if the token is valid and not expired
-    $sql = "SELECT * FROM pwdreset WHERE pwdResetSelector=? AND pwdResetExpires>=?";
-	$stmt = mysqli_stmt_init($conn);
+    $sql = "SELECT * FROM pwdreset WHERE pwdResetSelector=:selector AND pwdResetExpires>=:expires";
+	$stmt = $conn->prepare($sql);
+	// Bind parameters, execute the query, and get the results
+	$stmt -> bindParam(':selector', $selector, PDO::PARAM_STR);
+	$stmt -> bindParam(':expires', $currentDate, PDO::PARAM_STR);
+	$stmt -> execute();
 	
-	if (!mysqli_stmt_prepare($stmt, $sql)) {
-		header("Location: ../signup.php?error=sqlierror");
-		exit();	
+	$result = $stmt->fetch(PDO::FETCH_ASSOC);
+	
+	// Check if the row exists
+	if (!$result) {
+		$_SESSION['error'] = 'No valid entry';
+		header("Location: ../signup.php");
+		exit();
 	} else {
-		mysqli_stmt_bind_param($stmt, "ss", $selector, $currentDate);
-		mysqli_stmt_execute($stmt);
-		
-		$result = mysqli_stmt_get_result($stmt);
-		
-		// Check if the row exists
-        if (!$row = mysqli_fetch_assoc($result)) {
-			header("Location: ../signup.php?error=sqlierror");
+		// Verify the password reset token
+		$tokenBin = hex2bin($validator);
+		if(!password_verify($tokenBin, $result["pwdResetToken"])){
+			$_SESSION['error'] = 'No valid entry';
+			header("Location: ../signup.php?");
 			exit();
 		} else {
-			// Verify the password reset token
-            $tokenBin = hex2bin($validator);
-			if(!password_verify($tokenBin, $row["pwdResetToken"])){
-				header("Location: ../signup.php?error=sqlierror");
-				exit();
-			} else {
-				$email = $row["pwdResetEmail"];
-				$hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-				
-				// Update the password for the user
-				$sql = "UPDATE logins SET password=? WHERE email=?";
-				$stmt = mysqli_stmt_init($conn);
-				if (!mysqli_stmt_prepare($stmt, $sql)) {
-					header("Location: ../signup.php?error=sqlierror");
-					exit();
-				} else {
-					mysqli_stmt_bind_param($stmt, "ss", $hashedPassword, $email);
-					mysqli_stmt_execute($stmt);
-				}
-				
-				// Delete the password reset entry
-                $sql = "DELETE FROM pwdreset WHERE pwdResetEmail=?";
-				$stmt = mysqli_stmt_init($conn);
-				if (!mysqli_stmt_prepare($stmt, $sql)) {
-					header("Location: ../signup.php?error=sqlierror");
-					exit();
-				} else {
-					mysqli_stmt_bind_param($stmt, "s", $email);
-					mysqli_stmt_execute($stmt);
-					header("Location: ../signup.php?reset=success");
-					exit();
-				}
-			}
+			$email = $result["pwdResetEmail"];
+			$hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+			
+			// Update the password for the user
+			$sql = "UPDATE logins SET password=:password WHERE email=:email";
+			$stmt = $conn->prepare($sql);
+			$stmt -> bindParam(':password', $hashedPassword, PDO::PARAM_STR);
+			$stmt -> bindParam(':email', $email, PDO::PARAM_STR);
+			$stmt -> execute();
+			
+			// Delete the password reset entry
+			$sql = "DELETE FROM pwdreset WHERE pwdResetEmail=:email";
+			$stmt = $conn->prepare($sql);
+			$stmt -> bindParam(':email', $email, PDO::PARAM_STR);
+			$stmt -> execute();
+			$_SESSION['reset'] = 1;
+			header("Location: ../signup.php");
+			exit();
 		}
 	}
 
 	// Close database connections
-    mysqli_stmt_close($stmt);
-	mysqli_close($conn);
+    $stmt = null;
+	$conn = null;
 } else {
 	// Redirect to the home page if the form is not submitted
     header("Location: ../index.php");

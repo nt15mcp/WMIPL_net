@@ -14,7 +14,7 @@
 		header('Location index.php');
 		exit();
 	}
-	unset($_SESSION['page']);
+	$_SESSION['page']='edit';
 
 	// Include the common header file to maintain consistency across pages
 	require "header.php";
