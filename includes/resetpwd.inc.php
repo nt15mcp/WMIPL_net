@@ -83,14 +83,13 @@ if (isset($_POST["new-password-submit"])) {
 			$stmt -> bindParam(':email', $email, PDO::PARAM_STR);
 			$stmt -> execute();
 			$_SESSION['reset'] = 1;
+			// Close database connections
+			$stmt = null;
+			$conn = null;
 			header("Location: ../signup.php");
 			exit();
 		}
 	}
-
-	// Close database connections
-    $stmt = null;
-	$conn = null;
 } else {
 	// Redirect to the home page if the form is not submitted
     header("Location: ../index.php");

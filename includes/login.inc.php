@@ -71,6 +71,9 @@
 					if ($result) {
 						$_SESSION['executive'] = $result['title'];
 					}
+					// Close prepared statement and database connection
+					$stmt = null;
+					$conn = null;
 					// Redirect the user
 					header("Location: ../".$_SESSION['page'].".php");
 					exit();
@@ -82,9 +85,6 @@
 				exit();
 			}
 		}
-		// Close prepared statement and database connection
-		$stmt = null;
-		$conn = null;
 	} else {
 		// Redirect the user to the home page if the login form is not submitted
 		header("Location: ../".$_SESSION['page'].".php");

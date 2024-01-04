@@ -78,12 +78,12 @@ if(isset($_POST['signup-submit'])) {
 			// Redirect to signup success page
 			unset($_SESSION['error']);
 			$_SESSION['success'] = 1;
+			$stmt = null;
+			$conn = null;
 			header("Location: ../signup.php");
 			exit();
 		}
 	}
-	$stmt = null;
-	$conn = null;
 }
 else {
 	// Redirect to the signup page if the form is not submitted
