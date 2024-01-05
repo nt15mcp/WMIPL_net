@@ -163,7 +163,7 @@
 						</form>';
 						
 						// Display error message if login attempt failed
-						if (isset($_GET['error'])) {
+						if (isset($_SESSION['error']) && $_SESSION['error'] == 'login_error') {
 							echo '<p style="color:red;"><strong>Username or Password are incorrect!<strong></p>';
 						}
 

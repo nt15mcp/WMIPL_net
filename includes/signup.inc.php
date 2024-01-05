@@ -11,80 +11,79 @@
  * any issues are encountered during the signup process.
  *
  */
+// Start a new session or resume the existing session
+session_start();
 
+// See if the post is coming from the right location
+if(!isset($_SESSION['page']) && $_SESSION['page'] != 'signup'){
+	// Shouldn't be here, send them home
+	header('Location: ../index.php');
+	exit();
+}
+
+// Verify the post is set
 if(isset($_POST['signup-submit'])) {
 	
 	require 'dbh.inc.php'; // Use common database login file
 	
-	$username = $_POST['username'];
-	$email = $_POST['email'];
-	$password = $_POST['pass1'];
-	$checkPW = $_POST['pass2'];
+	$username = filter_input(INPUT_POST,'username', FILTER_SANITIZE_SPECIAL_CHARS);
+	$email = filter_input(INPUT_POST,'email', FILTER_SANITIZE_EMAIL);
+	$password = filter_input(INPUT_POST,'pass1', FILTER_SANITIZE_SPECIAL_CHARS);
+	$checkPW = filter_input(INPUT_POST,'pass2',FILTER_SANITIZE_SPECIAL_CHARS);
 	
 	if(empty($username) || empty($email) || empty($password) || empty($checkPW)) {
 		// Redirect with error message if any fields are empty
-		header("Location: ../signup.php?error=emptyfields&username=".$username."&email=".$email);
+		$_SESSION['error'] = 'empty_fields';
+		if($username){$_SESSION['username']=$username;}
+		if($email){$_SESSION['email']=$email;}
+		header("Location: ../signup.php");
 		exit();
-	}
-	else if(!filter_var($email, FILTER_VALIDATE_EMAIL) && !preg_match("/^[a-zA-Z0-9]*$/",$username)){
+	} else if(!filter_var($email, FILTER_VALIDATE_EMAIL) && !preg_match("/^[a-zA-Z0-9]*$/",$username)){
 		// Redirect with error message if email and username are both invalid
-		header("Location: ../signup.php?error=invalidemailusername");
+		$_SESSION['error'] = 'invalid_email_username';
+		if($username){$_SESSION['username']=$username;}
+		if($email){$_SESSION['email']=$email;}
+		header("Location: ../signup.php");
 		exit();
-	}
-	else if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-		// Redirect with error message if email is invalid
-		header("Location: ../signup.php?error=invalidemail&username=".$username);
-		exit();
-	}
-	else if(!preg_match("/^[a-zA-Z0-9]*$/",$username)) {
-		// Redirect with error message if username is invalid
-		header("Location: ../signup.php?error=invalidusername&email=".$email);
-		exit();
-	}
-	else if($password !== $checkPW) {
+	} else if($password !== $checkPW) {
 		// Redirect with error message if passwords do not match
-		header("Location: ../signup.php?error=passwordcheck&username=".$username."&email".$email);
+		$_SESSION['error'] = 'passwords_not_match';
+		if($username){$_SESSION['username']=$username;}
+		if($email){$_SESSION['email']=$email;}
+		header("Location: ../signup.php");
 		exit();
-	}
-	else {
-		$sql = "SELECT username FROM logins WHERE username=? OR email=?";
-		$stmt = mysqli_stmt_init($conn);
-		if (!mysqli_stmt_prepare($stmt, $sql)){
-			// Redirect with error message if there is an issue with the SQL query
-			header("Location: ../signup.php?error=sqlierror");
+	} else {
+		$sql = "SELECT COUNT(*) FROM logins WHERE username=:username OR email=:email";
+		$stmt = $conn->prepare($sql);
+		$stmt -> bindParam(':username', $username, PDO::PARAM_STR);
+		$stmt -> bindParam(':email', $email, PDO::PARAM_STR);
+		$stmt -> execute();
+
+		if($stmt->fetchColumn() > 0){
+			// Redirect with error message if username or email is already taken
+			$_SESSION['error'] = 'exists';
+			if($username){$_SESSION['username']=$username;}
+			if($email){$_SESSION['email']=$email;}
+			header("Location: ../signup.php");
+			exit();
+		} else {
+			$sql = "INSERT INTO logins (username, email, password) VALUES (:username,:email,:password)";
+			$stmt = $conn->prepare($sql);
+			$hashedPWD = password_hash($password, PASSWORD_BCRYPT);
+			$stmt -> bindParam(':username', $username, PDO::PARAM_STR);
+			$stmt -> bindParam(':email', $email, PDO::PARAM_STR);
+			$stmt -> bindParam(':password', $hashedPWD, PDO::PARAM_STR);
+			$stmt -> execute();
+		
+			// Redirect to signup success page
+			unset($_SESSION['error']);
+			$_SESSION['success'] = 1;
+			$stmt = null;
+			$conn = null;
+			header("Location: ../signup.php");
 			exit();
 		}
-		else {
-			mysqli_stmt_bind_param($stmt, "ss", $username, $email);
-			mysqli_stmt_execute($stmt);
-			mysqli_stmt_store_result($stmt);
-			$resultCheck = mysqli_stmt_num_rows($stmt);
-			if ($resultCheck > 0) {
-				// Redirect with error message if username or email is already taken
-				header("Location: ../signup.php?error=taken&email=".$email);
-				exit();
-			}
-			else {
-				$sql = "INSERT INTO logins (username, email, password) VALUES (?,?, ?)";
-				$stmt = mysqli_stmt_init($conn);
-				if(!mysqli_stmt_prepare($stmt, $sql)){
-					// Redirect with error message if there is an issue with the SQL query
-					header("Location: ../signup.php?error=sqlerror");
-					exit();
-				}
-				else {
-					$hashedPWD = password_hash($password, PASSWORD_BCRYPT);
-					mysqli_stmt_bind_param($stmt, "sss", $username, $email, $hashedPWD);
-					mysqli_stmt_execute($stmt);
-				}
-				// Redirect to signup success page
-				header("Location: ../signup.php?signup=success");
-				exit();
-			}
-		}
 	}
-	mysqli_stmt_close($stmt);
-	mysqli_close($conn);
 }
 else {
 	// Redirect to the signup page if the form is not submitted

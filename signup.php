@@ -19,10 +19,8 @@
 	// Start a new session or resume the existing session
 	session_start();
 	
-	// Unset the 'page' session variable if it is set
-	if (isset($_SESSION['page'])){
-		unset($_SESSION['page']);
-	}
+	// Set the 'page' variable in the Session
+	$_SESSION['page'] = 'signup';
 
 	// Include the common header file to avoid repetition
 	require "header.php"; // Use common header file so no need to repeat for each page
@@ -35,51 +33,42 @@
 
 			<?php
 				// Provide useful error information to the user
-				if (isset($_GET['error'])) {
-					if ($_GET['error'] == 'emptyfields') {
+				if (isset($_SESSION['error'])) {
+					if ($_SESSION['error'] == 'empty_fields') {
 						echo '<p>Fill in all fields!</p>';
-					}
-					else if ($_GET['error'] == 'invalidemailusername') {
+					} else if ($_SESSION['error'] == 'invalid_email_username') {
 						echo '<p>Invalid username and e-mail!</p>';
-					}
-					else if ($_GET['error'] == 'invalidemail') {
-						echo '<p>Invalid e-mail!</p>';
-					}
-					else if ($_GET['error'] == 'invalidusername') {
-						echo '<p>Invalid username!</p>';
-					}
-					else if ($_GET['error'] == 'passwordcheck') {
-						echo '<p>Your passwords do not match!</p>';
-					}
-					else if ($_GET['error'] == 'taken') {
+					} else if ($_SESSION['error'] == 'exists') {
 						echo '<p>Username or Email is already in use!</p>';
+					} else if ($_SESSION['error'] == 'passwords_not_match'){
+						echo '<p>Passwords do not match!</p>';
 					}
 				}
-				else if (isset($_GET['signup'])) {
-					if ($_GET['signup'] == 'success') {
-						echo '<p>Signup successful!</p>';
-					}
+				else if (isset($_SESSION['success'])) {
+					echo '<p>Signup successful!</p>';
 				}
 			?>
 
 			<!-- Provide a form for signing up -->
 			<form action="includes/signup.inc.php" method="post">
 				<?php
-					// Populate the username input if it is set in the URL parameters
-					if (isset($_GET['username'])) {
-						echo '<input style="margin:10px" type="text" name="username" value="'.$_GET['username'].'" required></br>';			
+					// Populate username if it is set from the validation file
+					echo '<input style="margin:10px" type="text" name="username" ';
+					if(isset($_SESSION['username'])){
+						echo 'value='.$_SESSION['username'];
+					} else {
+						echo 'placeholder="Username"';
 					}
-					else {
-						echo '<input style="margin:10px" type="text" name="username" placeholder="Username" required></br>';
-					}
+					echo ' required></br>';
 
-					// Populate the email input if it is set in the URL parameters
-					if (isset($_GET['email'])) {
-						echo '<input style="margin:10px" type="text" name="email" value="'.$_GET['email'].'" required></br>';			
+					// Populate the email if it is set in from the validation file
+					echo '<input style="margin:10px" type="text" name="email" ';
+					if(isset($_SESSION['email'])){
+						echo 'value='.$_SESSION['email'];
+					} else {
+						echo 'placeholder="E-mail"'; 
 					}
-					else {
-						echo '<input style="margin:10px" type="text" name="email" placeholder="E-mail" required></br>';
-					}
+					echo ' required></br>';
 				?>
 
 				<input style="margin:10px" type="password" name="pass1" placeholder="Password" required></br>
@@ -90,18 +79,8 @@
 			
 			<?php
 				// Provide the ability to reset passwords using this same page
-				if (isset($_GET["reset"])) {
-					if ($_GET["reset"] == "success") {
-						echo '<p>Your password has been reset!</p>';
-					}
-				}
-				else if(isset($_GET["error"])) {
-					If ($_GET["error"] == "sqlierror") {
-						echo '<p>There was a problem processing your request.</br><p>Please try again later</p>';
-					}
-					else if ($_GET["error"] == "invalidpassword") {
-						echo '<p>There was a problem with your password.</br><p>Please try again with the link provided in your email</p>';
-					}
+				if (isset($_SESSION["reset"])) {
+					echo '<p>Your password has been reset!</p>';
 				}
 			?>
 

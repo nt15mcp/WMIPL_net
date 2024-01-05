@@ -20,33 +20,23 @@ if (isset($_SESSION['page'])) {
 	
 	$page = $_SESSION['page']; // Set page variable for future use
 	
-	$sql = "SELECT content FROM pages WHERE page = ? ORDER BY created_at DESC LIMIT 1" ; // Set query for last saved data for this page
-	$stmt = mysqli_stmt_init($conn); // Initialize the query for MySQL
+	$sql = "SELECT content FROM pages WHERE page = :page ORDER BY created_at DESC LIMIT 1" ; // Set query for last saved data for this page
+	$stmt = $conn->prepare($sql); // Initialize the query for MySQL
+	$stmt -> bindParam(':page', $page, PDO::PARAM_STR);
+	$stmt -> execute();
 
-	// Check for good connection, capture error if not
-	if (!mysqli_stmt_prepare($stmt, $sql)) {
-		header("Location: ../".$_SESSION['page'].".php?error=sqlierror");
-		unset($_SESSION['page']);
-		exit();
-	}
-	// Execute MySQL query
-	else {
-		mysqli_stmt_bind_param($stmt, "s", $page);
-		mysqli_stmt_execute($stmt);
-		$result = mysqli_stmt_get_result($stmt);
-
-		// If content exists in the result, assign it to the variable
-		if ($row = mysqli_fetch_assoc($result)) {
-			$content = $row['content'];
-		} else {
-			// Otherwise give generic error
-			$content = "<p>Oops!  We couldn't find the content for this page</br><p>Please try again later.</p>";
-		}
+	// Get the resulting array
+	$result = $stmt->fetch(PDO::FETCH_ASSOC);
+	if($result){
+		$content = $result['content'];
+	} else {
+		// Otherwise give generic error
+		$content = "<p>Oops!  We couldn't find the content for this page</br><p>Please try again later.</p>";
 	}
 
 	// Close database connections to avoid leaving them open
-	mysqli_stmt_close($stmt);
-	mysqli_close($conn);
+	$stmt = null;
+	$conn = null;
 }
 else {
 	// If no session is running, take us back to the home page to start a session.

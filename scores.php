@@ -32,25 +32,25 @@
 		<div>
 			<!-- Setup a selection box bar across the top of the page to select divisions for viewing -->
 			<div class="w3-bar w3-center w3-border scores-bar">
-				<label class="w3-text-black w3-bar-item">Select to View In Page</label>
+				<label class="w3-text-black w3-bar-item w3-mobile">Select to View In Page</label>
 				<?php 
 					foreach ($divisions as $div=>$teams){
 						if ($div == 'U'){
 							echo '
-								<div class="w3-bar-item">
+								<div class="w3-bar-item w3-mobile">
 									<input id="unassChk" type="checkbox" label="Unassigned" value="false"><label>Unassigned</label>
 								</div>
 							';
 						} else {
 							echo '
-								<div class="w3-bar-item">
+								<div class="w3-bar-item w3-mobile">
 									<input id="div'.$div.'Chk" type="checkbox" label="Division '.$div.'" value="false"><label>Division '.$div.'</label>
 								</div>
 							';
 						} 
 					}
 					echo '
-						<div class="w3-bar-item">
+						<div class="w3-bar-item w3-mobile">
 							<input id="selectAllChk" type="checkbox" label="Select/Deselect All" value="true"><label>Select/Deselect All</label>
 						</div>
 					';

@@ -19,7 +19,7 @@ $divisions = array();
 $result = $conn->query("CALL current_roster()");
 
 // Iterate through the results
-while($row = $result->fetch_assoc() ){
+while($row = $result->fetch(PDO::FETCH_ASSOC) ){
     // Check if divisions array is empty
     if(!$divisions){
         // Create a multidimensional array where shooter and shooter number are within a team, which is within a division
@@ -44,7 +44,7 @@ while($row = $result->fetch_assoc() ){
 $roster = $divisions;
 
 // free the result set from the stored procedure calll
-$conn -> next_result();
+$result->closeCursor();
 
 // Uncomment the line below to check your work
 // echo json_encode($divisions);
@@ -62,7 +62,7 @@ $qual = array();
 $result = $conn->query("CALL current_season()");
 
 // Iterate through the results
-while($row = $result->fetch_assoc()){
+while($row = $result->fetch(PDO::FETCH_ASSOC)){
     // Check if this is the first row
     if(!$scores){
         // Create a multidimensional array where the shooter scores are compiled by week
@@ -127,7 +127,7 @@ if ($qual){
 $divisions[$division][$team][$number] = array($shooter => $scores);
 
 // Free the result set from the stored procedure
-$conn -> next_result();
+$result->closeCursor();
 
 // Divisions should now have scores attached to each shooter's name
 // Uncomment the line below to check your work
@@ -139,13 +139,13 @@ $lyas_arr = array();
 
 // Get LYAs for returning shooters
 $result = $conn->query("CALL current_lyas()");
-while($row = $result->fetch_assoc()){
+while($row = $result->fetch(PDO::FETCH_ASSOC)){
     $lyas_arr += array($row['name']=>$row['score']);
 }
 // Uncomment the line below to check your work
 // echo json_encode($scores);
 // Free the result set from the stored procedure
-$conn -> next_result();
+$result->closeCursor();
 
 // SECTION: Update Divisions with LYAs
 // Cycle through the existing divisions and add LYAs to shooters
@@ -172,17 +172,17 @@ $match_completed = 0;
 
 // Get the latest match number from the database
 $result = $conn->query("CALL match_completed");
-$res_arr = $result->fetch_assoc();
+$res_arr = $result->fetch(PDO::FETCH_ASSOC);
 $match_completed = $res_arr['match_num'];
-$conn->next_result();
+$result->closeCursor();
 
 // Create a new variable to hold the classes
 $classes = array();
 
 // Get the current class breakdown
 $result = $conn->query("CALL current_class");
-$classes = $result->fetch_assoc();
-$conn->next_result();
+$classes = $result->fetch(PDO::FETCH_ASSOC);
+$result->closeCursor();
 
 // Uncomment the lines below to check your work
 // echo json_encode($classes);
@@ -434,7 +434,7 @@ foreach($divisions as $div => $teams){
 // Calculate wins for each team
 $tie_breakers = array();
 $result = $conn->query("CALL current_tie_breaker()");
-while($row = $result->fetch_assoc()){
+while($row = $result->fetch(PDO::FETCH_ASSOC)){
     // Collect tie-breaker information
     if(array_key_exists($row['teams'],$tie_breakers)){
         $tie_breakers[$row['teams']] += $row['week'];
@@ -443,7 +443,7 @@ while($row = $result->fetch_assoc()){
     }
 }
 // Free the result set from the stored procedure
-$conn -> next_result();
+$result->closeCursor();
 
 foreach($divisions as $div => $teams){
     $div_teams = array_keys($teams);

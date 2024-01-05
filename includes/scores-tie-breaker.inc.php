@@ -13,7 +13,12 @@
  * - Ensure that the 'dbh.inc.php' file is present and correctly configured for database connection.
  * - The script outputs success or error messages as appropriate.
  */
-
+// Verify the post comes from the right place
+if(!isset($_SESSION['page']) || $_SESSION['page'] != 'scores-edit' || !isset($_SESSION['executive']) || $_SESSION['executive'] != 'Statistician'){
+    // Shouldn't be here, send them home
+    header("Location: ../index.php");
+    exit();
+ }
     // Check if a POST request has been made
     if(isset($_POST)){
         
@@ -37,69 +42,30 @@
             $week_id = 0;
 
             // Query to retrieve team id based on team name
-            $sql = "SELECT id FROM teams WHERE name=?";
-            $stmt = mysqli_stmt_init($conn);
+            $sql = "SELECT id FROM teams WHERE name=:team";
+            $stmt = $conn->prepare($sql);
 
-            // Check if the SQL statement is prepared successfully
-            if(!mysqli_stmt_prepare($stmt,$sql)){
-                echo "error=".mysqli_error($conn);
-                exit();
-            } else {
+            $stmt->bindParam(':team', $team, PDO::PARAM_STR);
+            $stmt->execute();
+            if($team_id = $stmt->fetchColumn()){
+                // Query to retrieve week id based on match number and date
+                $sql = "SELECT id FROM matches WHERE match_num=:match_num AND match_date >= (SELECT start_date FROM seasons WHERE id = (SELECT MAX(id) FROM seasons))";
+                $stmt = $conn->prepare($sql);
+
                 // Bind parameters and execute the statement
-                mysqli_stmt_bind_param($stmt, "s", $team);
-                mysqli_stmt_execute($stmt);
-                $result = mysqli_stmt_get_result($stmt);
+                $stmt->bindParam(':match_num', $week, PDO::PARAM_INT);
+                $stmt->execute();
+                if($week_id = $stmt->fetchColumn()){
+                     // Insert data into tie_breaker_win table
+                    $sql = "INSERT INTO tie_breaker_win (team_id, match_id) VALUES (:team_id,:match_id)";
+                    $stmt = $conn->prepare($sql);
 
-                // Fetch the result into an associative array
-                if($row = mysqli_fetch_assoc($result)){
-                    $team_id = $row['id'];
-                } else {
-                    // If no team is found, exit with an error message
-                    echo "error=no such team";
-                    exit();
-                }
-            }
-
-            // Query to retrieve week id based on match number and date
-            $sql = "SELECT id FROM matches WHERE match_num=? AND match_date >= (SELECT start_date FROM seasons WHERE id = (SELECT MAX(id) FROM seasons))";
-            $stmt = mysqli_stmt_init($conn);
-
-            // Check if the SQL statement is prepared successfully
-            if(!mysqli_stmt_prepare($stmt,$sql)){
-                echo "error=".mysqli_error($conn);
-                exit();
-            } else {
-                // Bind parameters and execute the statement
-                mysqli_stmt_bind_param($stmt, "i", $week);
-                mysqli_stmt_execute($stmt);
-                $result = mysqli_stmt_get_result($stmt);
-
-                // Fetch the result into an associative array
-                if($row = mysqli_fetch_assoc($result)){
-                    $week_id = $row['id'];
-                } else {
-                    // If no week is found, exit with an error message
-                    echo "error=no week found";
-                    exit();
-                }
-            }
-
-            // Check if both team_id and week_id are greater than 0
-            if($team_id > 0 && $week_id > 0){
-                // Insert data into tie_breaker_win table
-                $sql = "INSERT INTO tie_breaker_win (team_id, match_id) VALUES (?,?)";
-                $stmt = mysqli_stmt_init($conn);
-
-                // Check if the SQL statement is prepared successfully
-                if(!mysqli_stmt_prepare($stmt, $sql)){
-                    echo "error=".mysqli_error($conn);
-                    exit();
-                } else {
                     // Bind parameters and execute the statement
-                    mysqli_stmt_bind_param($stmt, "ii", $team_id, $week_id);
+                    $stmt->bindParam(':team_id', $team_id, PDO::PARAM_INT);
+                    $stmt->bindParam(':week_id', $week_id, PDO::PARAM_INT);
                     
                     // Check if the statement execution is successful
-                    if(!mysqli_stmt_execute($stmt)){
+                    if(!$stmt->execute()){
                         // If insertion fails, exit with an error message
                         echo "error=could not insert into tie_breaker_win week=".$week_id." for team=".$team_id.".";
                         exit();
@@ -107,10 +73,15 @@
                         // If insertion is successful, echo a success message
                         echo "Inserted week: ".$week." and team: ".$team." into tie_breaker_win";
                     }
+                } else {
+                    // If no week is found, exit with an error message
+                    echo "error=no week found";
+                    exit();
                 }
             } else {
-                // If no valid ids are retrieved, echo a message indicating no insertion
-                echo "No ids retrieved, so nothing inserted";
+                // If no team is found, exit with an error message
+                echo "error=no such team";
+                exit();
             }
         }
     }

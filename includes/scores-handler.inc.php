@@ -9,6 +9,12 @@
  * Note: The script expects a JSON payload in the format: {"shooter_week": "score", ...}
  *
  */
+// Verify the post comes from the right place
+ if(!isset($_SESSION['page']) || $_SESSION['page'] != 'scores-edit' || !isset($_SESSION['executive']) || $_SESSION['executive'] != 'Statistician'){
+    // Shouldn't be here, send them home
+    header("Location: ../index.php");
+    exit();
+ }
     if(isset($_POST)){
         // Get JSON data from the request
         $json = file_get_contents('php://input');
@@ -40,120 +46,82 @@
                 $shooter_id = 0;
 
                 // Retrieve shooter ID from the database
-                $sql = "SELECT id FROM shooters WHERE display_name=?";
-                $stmt = mysqli_stmt_init($conn);
+                $sql = "SELECT id FROM shooters WHERE display_name=:display_name";
+                $stmt = $con->prepare($sql);
 
-                if(!mysqli_stmt_prepare($stmt, $sql)){
-                    echo "error=".mysqli_error($conn);
-                    exit();
-                } else {
-                    mysqli_stmt_bind_param($stmt, "s", $shooter);
-                    mysqli_stmt_execute($stmt);
-                    $result = mysqli_stmt_get_result($stmt);
+                $stmt->bindParam(':display_name', $shooter, PDO::PARAM_STR);
+                $stmt->execute();
+                if($shooter_id = $stmt->fetchColumn()){
 
-                    if ($row = mysqli_fetch_assoc($result)) {
-                        $shooter_id = $row['id'];
+                    // Process and update scores for each week
+                    foreach($scores as $week=>$score){
+                        $week_id = 0;
                         
-                        // Process and update scores for each week
-                        foreach($scores as $week=>$score){
-                            $week_id = 0;
-                            
-                            // Retrieve week ID from the database
-                            $sql = "SELECT id FROM matches WHERE match_num=? AND match_date >= (SELECT start_date FROM seasons WHERE id = (SELECT max(id) FROM seasons))";
-                            $stmt = mysqli_stmt_init($conn);
-                            
-                            if(!mysqli_stmt_prepare($stmt, $sql)){
-                                echo "error=".mysqli_error($conn);
-                                exit();
-                            } else {
-                                mysqli_stmt_bind_param($stmt, "s", $week);
-                                mysqli_stmt_execute($stmt);
-                                $result = mysqli_stmt_get_result($stmt);
+                        // Retrieve week ID from the database
+                        $sql = "SELECT id FROM matches WHERE match_num=:match_num AND match_date >= (SELECT start_date FROM seasons WHERE id = (SELECT max(id) FROM seasons))";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bindParam(':match_num', $week, PDO::PARAM_STR);
+                        $stmt->execute();
+                        if($week_id = $stmt->fetchColumn()){
+                            // Update score if it exists
+                            $sql = "SELECT id FROM scores WHERE shooter_id=:shooter_id AND match_id=:week_id";
+                            $stmt = $conn->prepare($sql);
 
-                                if($row = mysqli_fetch_assoc($result)) {
-                                    $week_id = $row['id'];
+                            $stmt->bindParam(':shooter_id', $shooter_id, PDO::PARAM_INT);
+                            $stmt->bindParam(':week_id', $week_id, PDO::PARAM_INT);
+                            $stmt->execute();
+                            if($score_id = $stmt->fetchColumn()){
+                                if($score != ''){
+                                    // Score exists, update it
+                                    $sql = "UPDATE scores SET score=:score, changed=1, created_at=now() WHERE id=:score_id";
+                                    $stmt = $conn->prepare($sql);
 
-                                    if($score != ''){
-                                        // Update score if it exists
-                                        $sql = "SELECT id FROM scores WHERE shooter_id=? AND match_id=?";
-                                        $stmt = mysqli_stmt_init($conn);
-
-                                        if(!mysqli_stmt_prepare($stmt, $sql)){
-                                            echo "error=".mysqli_error($conn);
-                                            exit();
-                                        } else {
-                                            mysqli_stmt_bind_param($stmt, "ii", $shooter_id, $week_id);
-                                            mysqli_stmt_execute($stmt);
-                                            $result = mysqli_stmt_get_result($stmt);
-
-                                            if($row = mysqli_fetch_assoc($result)) {
-                                                // Score exists, update it
-                                                $sql = "UPDATE scores SET score=?, changed=1, created_at=now() WHERE shooter_id=? AND match_id=?";
-                                                $stmt = mysqli_stmt_init($conn);
-
-                                                if(!mysqli_stmt_prepare($stmt, $sql)){
-                                                    echo "error=".mysqli_error($conn);
-                                                    exit();
-                                                } else {
-                                                    mysqli_stmt_bind_param($stmt, "iii", $score, $shooter_id, $week_id);
-                                                    
-                                                    if(!mysqli_stmt_execute($stmt)){
-                                                        echo "error=could not update ".$score." for ".$shooter." on week ".$week;
-                                                        exit();
-                                                    } else {
-                                                        echo 'Updated week: '.$week.' score: '.$score.' for '.$shooter.'.';
-                                                    }
-                                                }
-                                            } else {
-                                                // Score does not exist, insert it
-                                                $sql = "INSERT INTO scores (shooter_id, match_id, score, changed, created_at) VALUES (?,?,?,0,now())";
-                                                $stmt = mysqli_stmt_init($conn);
-
-                                                if(!mysqli_stmt_prepare($stmt, $sql)){
-                                                    echo "error=".mysqli_error($conn);
-                                                    exit();
-                                                } else {
-                                                    mysqli_stmt_bind_param($stmt, "iii", $shooter_id, $week_id, $score);
-
-                                                    if(!mysqli_stmt_execute($stmt)){
-                                                        echo "error=could not insert ".$score." for ".$shooter." on week ".$week;
-                                                        exit();
-                                                    } else {
-                                                        echo 'Inserted week: '.$week.' score: '.$score.' into '.$shooter.'.';
-                                                    }
-                                                }
-                                            }
-                                        }
+                                    $stmt->bindParam(':score', $score, PDO::PARAM_INT);
+                                    $stmt->bindParam(':score_id', $score_id, PDO::PARAM_INT);
+                                    
+                                    if(!$stmt->execute()){
+                                        echo "error=could not update ".$score." for ".$shooter." on week ".$week;
+                                        exit();
                                     } else {
-                                        // Delete score if it exists
-                                        $sql = "DELETE FROM scores WHERE shooter_id=? AND match_id=?";
-                                        $stmt = mysqli_stmt_init($conn);
-
-                                        if(!mysqli_stmt_prepare($stmt, $sql)){
-                                            echo "error=".mysqli_error($conn);
-                                            exit();
-                                        } else {
-                                            mysqli_stmt_bind_param($stmt, "ii", $shooter_id, $week_id);
-                                            
-                                            if(!mysqli_stmt_execute($stmt)){
-                                                echo "error=could not delete score for ".$shooter." on week ".$week;
-                                                exit();
-                                            } else {
-                                                echo 'Deleted week: '.$week.' score for '.$shooter.'.';
-                                            }
-                                        }
+                                        echo 'Updated week: '.$week.' score: '.$score.' for '.$shooter.'.';
                                     }
                                 } else {
-                                    echo "error=could not retrieve id for week '".$week."'.";
+                                    // Delete score if it exists
+                                    $sql = "DELETE FROM scores WHERE score_id=:score_id";
+                                    $stmt = $conn->prepare($sql);
+                                    $stmt->bindParam(':score_id', $score_id, PDO::PARAM_INT);
+                                        
+                                    if(!$stmt->execute()){
+                                        echo "error=could not delete score for ".$shooter." on week ".$week;
+                                        exit();
+                                    } else {
+                                        echo 'Deleted week: '.$week.' score for '.$shooter.'.';
+                                    }
+                                }
+                            } elseif ($score != '') {
+                                // Score does not exist, insert it
+                                $sql = "INSERT INTO scores (shooter_id, match_id, score, changed, created_at) VALUES (:shooter_id,:week_id,:score,0,now())";
+                                $stmt = $conn->prepare($sql);
+
+                                $stmt->bindParam(':shooter_id', $shooter_id, PDO::PARAM_INT);
+                                $stmt->bindParam(':week_id', $week_id, PDO::PARAM_INT);
+                                $stmt->bindParam(':score', $score, PDO::PARAM_INT);
+
+                                if(!$stmt->execute()){
+                                    echo "error=could not insert ".$score." for ".$shooter." on week ".$week;
                                     exit();
+                                } else {
+                                    echo 'Inserted week: '.$week.' score: '.$score.' into '.$shooter.'.';
                                 }
                             }
-
+                        } else {
+                            echo "error=could not retrieve id for week '".$week."'.";
+                            exit();
                         }
-                    } else {
-                        echo "error=could not retrieve id for '".$shooter."'.";
-                        exit();
                     }
+                } else {
+                    echo "error=could not retrieve id for '".$shooter."'.";
+                    exit();
                 }
             }
         }

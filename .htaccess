@@ -17,4 +17,4 @@ RewriteRule ^(.*)\.html$ $1.php [L]
 RewriteRule ^(.*)\.[\d]{10}\.(css|js)$ $1.$2 [L]
 
 # Deny access to special files from the webserver
-<filesMatch ".(htaccess|htpasswd|ini|phps|fla|psd|log|sh)$">  Order Allow,Deny  Deny from all </filesMatch>
+# <filesMatch ".(htaccess|htpasswd|ini|phps|fla|psd|log|sh)$">  Order Allow,Deny  Deny from all </filesMatch>

@@ -19,12 +19,11 @@ $dbpassword = $ini['db_pword'];
 $database = $ini['db_name'];
 
 // Establish a connection to the MySQL database
-$conn = mysqli_connect($servername, $dbusername, $dbpassword, $database);
+try {
+	$conn = new PDO('mysql:host='.$servername.';dbname='.$database,$dbusername,$dbpassword, [PDO::ATTR_EMULATE_PREPARES => false]);
+} catch(\PDOException $e) {
+	throw new \PDOException($e->getMessage(), $e->getCode());
+}
 
-// Check if the connection was successful
-if(!$conn){
-	// If the connection fails, terminate the script and display an error message
-    die("Connection failed: ".mysqli_connect_error());
-	}
 // If the connection is successful, the $conn variable can be used for database operations
 ?>

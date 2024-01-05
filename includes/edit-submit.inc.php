@@ -10,6 +10,12 @@
 // Start a new session or resume the existing session
 session_start();
 
+// Check that the submission came from the right place
+if(isset($_SESSION['page']) && $_SESSION['page'] != 'edit'){
+	//Shouldn't be here, send them home
+	header("Location:../index.php");
+	exit();
+}
 // Check if the 'edit-submit' form is submitted
 if(isset($_POST['edit-submit'])){
 	

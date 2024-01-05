@@ -10,10 +10,8 @@
 	// Start a new session or resume the existing session
 	session_start();
 
-	// Unset the 'page' session variable if it exists
-	if (isset($_SESSION['page'])){
-		unset($_SESSION['page']);
-	}
+	// Set the session variable
+	$_SESSON['page']='pwdreset';
 
 	// Include the common header file to maintain consistency across pages
 	require "header.php";
@@ -32,14 +30,11 @@
 
 			<?php 
 				// Check for successful password reset request
-				if (isset($_GET["reset"])) {
-					if ($_GET["reset"] == "success") {
-						echo "<p>Check your e-mail!</p>";
-					}
+				if (isset($_SESSION['success']) && $_SESSION['success']) {
+					echo "<p>Check your e-mail!</p>";
+				} else if (isset($_SESSION['error']) && $_SESSION['error'] == 'invalid_email') {
 					// Alert user that the email is not valid
-					else if ($_GET["reset"] == "emailinvalid") {
-						echo "<p>E-mail is not recognized</p>";
-					}
+					echo "<p>E-mail is not recognized</p>";
 				}
 			?>
 		</div>
