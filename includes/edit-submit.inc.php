@@ -24,10 +24,11 @@ if(isset($_POST['edit-submit'])){
 		if(!is_numeric($_POST['zip']) || strlen($_POST['zip']) != 5){
 			// Redirect with an error message for invalid ZIP code
             header("Location: ../edit.php?error=invalidzip");
-			exit();
+            exit();
+
 		}	
 	}
-	
+
 	// Check and validate secondary phone number if provided
     if(isset($_POST['phonesec'])){
 		$phoneDigits = strlen(preg_replace("/[^0-9]/", "", $_POST['phone']));
