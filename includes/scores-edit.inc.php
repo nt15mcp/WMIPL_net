@@ -20,7 +20,7 @@ $divisions = array();
 $result = $conn->query("CALL current_roster()");
 
 // While loop runs for all the data
-while($row = $result->fetch_assoc() ){
+while($row = $result->fetch(PDO::FETCH_ASSOC)){
     // If this is the first row, start the array
     if(!$divisions){
         // Multidimensional array where shooter and shooter number are within team, which is within division
@@ -42,7 +42,7 @@ while($row = $result->fetch_assoc() ){
 }
 
 // Free the result set from the stored procedure call
-$conn -> next_result();
+$conn->closeCursor();
 
 // Start with a fresh array
 $scores = array();
@@ -56,7 +56,7 @@ $qual = array();
 $result = $conn->query("CALL current_season()");
 
 // While loop runs for all the data
-while($row = $result->fetch_assoc()){
+while($row = $result->fetch(PDO::FETCH_ASSOC)){
     // If this is the first row, start the array
     if(!$scores){
         // Multidimensional array where the shooter scores are compiled by week
@@ -91,5 +91,5 @@ while($row = $result->fetch_assoc()){
 $divisions[$division][$team][$number] = array($shooter => $scores);
  
 // Free the result set from the stored procedure
-$conn -> next_result();
+$conn->closeCursor();
 ?>

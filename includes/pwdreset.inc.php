@@ -7,13 +7,15 @@
  *
  */
 
-// Set alias for namespace and inherit a trait
-use PHPMailer\PHPMailer\{PHPMailer,Exception,SMTP};
-
-// Include PHPMailer classes
+ // Include PHPMailer classes
 require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
+
+// Set alias for namespace and inherit a trait
+use PHPMailer\PHPMailer\{PHPMailer,Exception,SMTP};
+
+
 
 // Verify the post came from the right place
 if(!isset($_SESSION['page']) && $_SESSION['page'] != 'pwdreset'){
