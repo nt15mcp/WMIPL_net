@@ -4,56 +4,56 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5bb420b9254cda11f4f4a77e841783b3",
+    "content-hash": "d536aaf3516d9cf80e7ba6f6588424df",
     "packages": [],
     "packages-dev": [
         {
-            "name": "ckeditor/ckeditor",
-            "version": "4.23.0",
+            "name": "froala/wysiwyg-editor",
+            "version": "v4.1.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ckeditor/ckeditor4-releases.git",
-                "reference": "13a70b2385e6ff7805c2faff1278fca6e42646f7"
+                "url": "https://github.com/froala/wysiwyg-editor.git",
+                "reference": "d0581521990fb26457af16167a4565b8dba61e60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ckeditor/ckeditor4-releases/zipball/13a70b2385e6ff7805c2faff1278fca6e42646f7",
-                "reference": "13a70b2385e6ff7805c2faff1278fca6e42646f7",
+                "url": "https://api.github.com/repos/froala/wysiwyg-editor/zipball/d0581521990fb26457af16167a4565b8dba61e60",
+                "reference": "d0581521990fb26457af16167a4565b8dba61e60",
                 "shasum": ""
             },
-            "type": "library",
+            "type": "component",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "GPL-2.0+",
-                "LGPL-2.1+",
-                "MPL-1.1+"
+                "proprietary"
             ],
             "authors": [
                 {
-                    "name": "CKSource",
-                    "homepage": "https://cksource.com"
+                    "name": "Froala Labs",
+                    "email": "support@froala.com"
                 }
             ],
-            "description": "JavaScript WYSIWYG web text editor.",
-            "homepage": "https://ckeditor.com/ckeditor-4/",
+            "description": "A beautiful jQuery WYSIWYG HTML rich text editor. High performance and modern design make it easy to use for developers and loved by users.",
+            "homepage": "https://www.froala.com/wysiwyg-editor",
             "keywords": [
-                "CKEditor",
-                "ckeditor4",
                 "editor",
-                "fckeditor",
+                "froala",
+                "froala-editor",
+                "froala-wysiwyg",
                 "html",
                 "javascript",
-                "richtext",
+                "jquery",
+                "jquery-plugin",
+                "rich editor",
+                "rich text editor",
+                "rte",
                 "text",
                 "wysiwyg"
             ],
             "support": {
-                "forum": "https://stackoverflow.com/tags/ckeditor",
-                "issues": "https://github.com/ckeditor/ckeditor4/issues",
-                "source": "https://github.com/ckeditor/ckeditor4",
-                "wiki": "https://ckeditor.com/docs/ckeditor4/latest/"
+                "issues": "https://www.froala.com/wysiwyg-editor/contact",
+                "source": "https://github.com/froala/wysiwyg-editor/tree/v4.1.4"
             },
-            "time": "2023-08-24T13:32:10+00:00"
+            "time": "2023-12-07T07:52:14+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
