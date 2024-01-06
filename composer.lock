@@ -4,57 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d536aaf3516d9cf80e7ba6f6588424df",
+    "content-hash": "9f0c7543ae2702762cbcf1d728223906",
     "packages": [],
     "packages-dev": [
-        {
-            "name": "froala/wysiwyg-editor",
-            "version": "v4.1.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/froala/wysiwyg-editor.git",
-                "reference": "d0581521990fb26457af16167a4565b8dba61e60"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/froala/wysiwyg-editor/zipball/d0581521990fb26457af16167a4565b8dba61e60",
-                "reference": "d0581521990fb26457af16167a4565b8dba61e60",
-                "shasum": ""
-            },
-            "type": "component",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "Froala Labs",
-                    "email": "support@froala.com"
-                }
-            ],
-            "description": "A beautiful jQuery WYSIWYG HTML rich text editor. High performance and modern design make it easy to use for developers and loved by users.",
-            "homepage": "https://www.froala.com/wysiwyg-editor",
-            "keywords": [
-                "editor",
-                "froala",
-                "froala-editor",
-                "froala-wysiwyg",
-                "html",
-                "javascript",
-                "jquery",
-                "jquery-plugin",
-                "rich editor",
-                "rich text editor",
-                "rte",
-                "text",
-                "wysiwyg"
-            ],
-            "support": {
-                "issues": "https://www.froala.com/wysiwyg-editor/contact",
-                "source": "https://github.com/froala/wysiwyg-editor/tree/v4.1.4"
-            },
-            "time": "2023-12-07T07:52:14+00:00"
-        },
         {
             "name": "phpmailer/phpmailer",
             "version": "v6.9.1",
@@ -135,6 +87,65 @@
                 }
             ],
             "time": "2023-11-25T22:23:28+00:00"
+        },
+        {
+            "name": "tinymce/tinymce",
+            "version": "6.8.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tinymce/tinymce-dist.git",
+                "reference": "b0073db409746748af4fc06fbee337bb99f462d9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/b0073db409746748af4fc06fbee337bb99f462d9",
+                "reference": "b0073db409746748af4fc06fbee337bb99f462d9",
+                "shasum": ""
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "scripts": [
+                        "tinymce.js",
+                        "plugins/*/plugin.js",
+                        "themes/*/theme.js",
+                        "models/*/model.js",
+                        "icons/*/icons.js"
+                    ],
+                    "files": [
+                        "tinymce.min.js",
+                        "plugins/*/plugin.min.js",
+                        "themes/*/theme.min.js",
+                        "models/*/model.min.js",
+                        "skins/**",
+                        "icons/*/icons.min.js"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT-only"
+            ],
+            "description": "Web based JavaScript HTML WYSIWYG editor control.",
+            "homepage": "https://www.tiny.cloud/",
+            "keywords": [
+                "contenteditable",
+                "editing",
+                "html",
+                "javascript",
+                "rich editor",
+                "rich text",
+                "rich text editor",
+                "richtext",
+                "rte",
+                "text",
+                "tinymce",
+                "wysiwyg"
+            ],
+            "support": {
+                "source": "https://github.com/tinymce/tinymce-dist/tree/6.8.2"
+            },
+            "time": "2023-12-11T03:21:56+00:00"
         }
     ],
     "aliases": [],
