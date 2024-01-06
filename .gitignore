@@ -1,6 +1,7 @@
 # ignore file with login information #
 ######################################
 app.ini
+vendor\*.*
 
 # Compiled source #
 ###################
