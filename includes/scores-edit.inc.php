@@ -42,7 +42,7 @@ while($row = $result->fetch(PDO::FETCH_ASSOC)){
 }
 
 // Free the result set from the stored procedure call
-$result->closeCursor();
+$result=null;
 
 // Start with a fresh array
 $scores = array();
@@ -91,5 +91,5 @@ while($row = $result->fetch(PDO::FETCH_ASSOC)){
 $divisions[$division][$team][$number] = array($shooter => $scores);
  
 // Free the result set from the stored procedure
-$result->closeCursor();
+$result=null;
 ?>

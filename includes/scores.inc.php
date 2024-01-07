@@ -44,7 +44,7 @@ while($row = $result->fetch(PDO::FETCH_ASSOC) ){
 $roster = $divisions;
 
 // free the result set from the stored procedure calll
-$result->closeCursor();
+$result=null;
 
 // Uncomment the line below to check your work
 // echo json_encode($divisions);
@@ -127,7 +127,7 @@ if ($qual){
 $divisions[$division][$team][$number] = array($shooter => $scores);
 
 // Free the result set from the stored procedure
-$result->closeCursor();
+$result=null;
 
 // Divisions should now have scores attached to each shooter's name
 // Uncomment the line below to check your work
@@ -145,7 +145,7 @@ while($row = $result->fetch(PDO::FETCH_ASSOC)){
 // Uncomment the line below to check your work
 // echo json_encode($scores);
 // Free the result set from the stored procedure
-$result->closeCursor();
+$result=null;
 
 // SECTION: Update Divisions with LYAs
 // Cycle through the existing divisions and add LYAs to shooters
@@ -174,7 +174,7 @@ $match_completed = 0;
 $result = $conn->query("CALL match_completed");
 $res_arr = $result->fetch(PDO::FETCH_ASSOC);
 $match_completed = $res_arr['match_num'];
-$result->closeCursor();
+$result=null;
 
 // Create a new variable to hold the classes
 $classes = array();
@@ -182,7 +182,7 @@ $classes = array();
 // Get the current class breakdown
 $result = $conn->query("CALL current_class");
 $classes = $result->fetch(PDO::FETCH_ASSOC);
-$result->closeCursor();
+$result=null;
 
 // Uncomment the lines below to check your work
 // echo json_encode($classes);
@@ -443,7 +443,7 @@ while($row = $result->fetch(PDO::FETCH_ASSOC)){
     }
 }
 // Free the result set from the stored procedure
-$result->closeCursor();
+$result=null;
 
 foreach($divisions as $div => $teams){
     $div_teams = array_keys($teams);

@@ -20,7 +20,15 @@ $database = $ini['db_name'];
 
 // Establish a connection to the MySQL database
 try {
-	$conn = new PDO('mysql:host='.$servername.';dbname='.$database,$dbusername,$dbpassword, [PDO::ATTR_EMULATE_PREPARES => false]);
+	$conn = new PDO(
+        'mysql:host='.$servername.';dbname='.$database,
+        $dbusername,
+        $dbpassword, 
+        array(
+            PDO::ATTR_EMULATE_PREPARES => false,
+            PDO::ATTR_PERSISTENT => true
+        )
+    );
 } catch(\PDOException $e) {
 	throw new \PDOException($e->getMessage(), $e->getCode());
 }
