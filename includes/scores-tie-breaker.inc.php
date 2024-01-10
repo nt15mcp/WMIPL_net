@@ -13,8 +13,10 @@
  * - Ensure that the 'dbh.inc.php' file is present and correctly configured for database connection.
  * - The script outputs success or error messages as appropriate.
  */
+// start a new session if not already running
+session_start();
 // Verify the post comes from the right place
-if(!isset($_SESSION['page']) || $_SESSION['page'] != 'scores-edit' || !isset($_SESSION['executive']) || $_SESSION['executive'] != 'Statistician'){
+if(!isset($_SESSION['executive']) || $_SESSION['executive'] != 'Statistician'){
     // Shouldn't be here, send them home
     header("Location: ../index.php");
     exit();
@@ -24,7 +26,6 @@ if(!isset($_SESSION['page']) || $_SESSION['page'] != 'scores-edit' || !isset($_S
         
         // Retrieve raw JSON data from the request
         $json = file_get_contents('php://input');
-        
         // Decode JSON data into associative array
         $data = json_decode($json, true);
 
@@ -57,7 +58,7 @@ if(!isset($_SESSION['page']) || $_SESSION['page'] != 'scores-edit' || !isset($_S
                 $stmt->execute();
                 if($week_id = $stmt->fetchColumn()){
                      // Insert data into tie_breaker_win table
-                    $sql = "INSERT INTO tie_breaker_win (team_id, match_id) VALUES (:team_id,:match_id)";
+                    $sql = "INSERT INTO tie_breaker_win (team_id, match_id) VALUES (:team_id,:week_id)";
                     $stmt = $conn->prepare($sql);
 
                     // Bind parameters and execute the statement
