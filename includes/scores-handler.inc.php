@@ -9,6 +9,9 @@
  * Note: The script expects a JSON payload in the format: {"shooter_week": "score", ...}
  *
  */
+if(!isset($_SESSION)) {
+    session_start();
+}  
 // Verify the post comes from the right place
  if(!isset($_SESSION['page']) || $_SESSION['page'] != 'scores-edit' || !isset($_SESSION['executive']) || $_SESSION['executive'] != 'Statistician'){
     // Shouldn't be here, send them home
@@ -47,7 +50,7 @@
 
                 // Retrieve shooter ID from the database
                 $sql = "SELECT id FROM shooters WHERE display_name=:display_name";
-                $stmt = $con->prepare($sql);
+                $stmt = $conn->prepare($sql);
 
                 $stmt->bindParam(':display_name', $shooter, PDO::PARAM_STR);
                 $stmt->execute();
@@ -87,7 +90,7 @@
                                     }
                                 } else {
                                     // Delete score if it exists
-                                    $sql = "DELETE FROM scores WHERE score_id=:score_id";
+                                    $sql = "DELETE FROM scores WHERE id=:score_id";
                                     $stmt = $conn->prepare($sql);
                                     $stmt->bindParam(':score_id', $score_id, PDO::PARAM_INT);
                                         

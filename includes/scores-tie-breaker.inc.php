@@ -14,7 +14,9 @@
  * - The script outputs success or error messages as appropriate.
  */
 // start a new session if not already running
-session_start();
+if(!isset($_SESSION)) {
+    session_start();
+}  
 // Verify the post comes from the right place
 if(!isset($_SESSION['executive']) || $_SESSION['executive'] != 'Statistician'){
     // Shouldn't be here, send them home
@@ -86,4 +88,3 @@ if(!isset($_SESSION['executive']) || $_SESSION['executive'] != 'Statistician'){
             }
         }
     }
-?>

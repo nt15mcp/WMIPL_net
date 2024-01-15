@@ -13,6 +13,15 @@
 // Include the database helper
 require 'dbh.inc.php';
 
+// Create a new variable for scores calculations
+$match_completed = 0;
+
+// Get the latest match number from the database
+$result = $conn->query("CALL match_completed");
+$res_arr = $result->fetch(PDO::FETCH_ASSOC);
+$match_completed = $res_arr['match_num'];
+$result=null;
+
 // Initialize the divisions array
 $divisions = array();
 
