@@ -213,12 +213,10 @@ foreach ($divisions as $div => $teams) {
                     for ($wk = 1; $wk < 16; $wk++) {
                         if (!array_key_exists($wk, $scores)) {
                             if ($wk <= $match_completed) {
-                                if (array_key_exists($shooter, $dummy_shooters)) {
-                                    if ($wk >= $dummy_shooters[$shooter]) {
-                                        $missed_score = round(($agg + $divisions[$div][$team][$number][$shooter]['lya']) / $wk);
-                                    }
+                                if (array_key_exists($shooter, $dummy_shooters) && $wk >= $dummy_shooters[$shooter]) {
+                                    $missed_score = round(($agg + $divisions[$div][$team][$number][$shooter]['lya']) / $wk);
                                 } else {
-                                    $missed_score = round(($agg + $divisions[$div][$team][$number][$shooter]['lya']) / $wk) - 10;
+                                    $missed_score = round(($agg + $divisions[$div][$team][$number][$shooter]['lya']) / ($wk)) - 10;
                                 }
                                 $divisions[$div][$team][$number][$shooter] += array($wk => array($missed_score, '0', '1'));
                                 $agg += $missed_score;
