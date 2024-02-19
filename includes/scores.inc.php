@@ -668,7 +668,7 @@ foreach ($divisions as $div => $teams) {
                 // Update team winner if they have more wins
                 $wins = $teams[$name]['team_wins'];
                 $team_winners[$div] = $name;
-            } elseif ($teams[$name]['team-wins'] = $wins) {
+            } elseif ($teams[$name]['team_wins'] == $wins) {
                 // Check for tiebreakers if teams have the same number of wins
                 $win = 0;
                 $totals = 0;
